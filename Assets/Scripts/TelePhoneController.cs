@@ -8,7 +8,7 @@ public class TelePhoneController : InteractiveController {
 	// Use this for initialization
 	void Start () {
         Init(transitionOffTime: 2, key:KeyCode.F);
-        gameObject;
+        //gameObject;
         // init timer
 	}
 
@@ -20,8 +20,8 @@ public class TelePhoneController : InteractiveController {
 	}
 
     // update() {
-        State = (State+1)%4;
-    }
+        //State = (State+1)%4;
+    //}
     // Spawn object
 
 	// Place object
@@ -78,4 +78,4 @@ public class TelePhoneController : InteractiveController {
 
         pRBody.AddForce(newMoveDir);
     } */
-}
+} 
