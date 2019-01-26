@@ -5,36 +5,39 @@ public class TelePhoneController : InteractiveController {
  
     private Rigidbody2D pRBody;
     private Timer nextCallTimer;
-    private int nextCallTime;
+    private float nextCallTime;
 	// Use this for initialization
 	void Start () {
-        Init(transitionOffTime: 2, key:KeyCode.F);
-        int nextCallTime = Random.Range(15, 45);
+        Init(transitionOffTime: 2, key:KeyCode.Space);
+        nextCallTime = Random.Range(15, 45);
         nextCallTimer = new Timer(nextCallTime);
-        Debug.Log("TIME TIL NEXT CALL: " + nextCallTimer.time);
+        Debug.Log("TIME TIL NEXT CALL: " + nextCallTime);
 	}
 
 	// Update is called once per frame
 	void Update ()
     {
         base.Update();
+        Debug.Log(state);
 	}
-    private void UpdateOff()
+    public override void UpdateOff()
     {
         // Only activates once, switches us to an activating state
+        nextCallTimer.Update();
+        Debug.Log(nextCallTimer.time.ToString());
         if(nextCallTimer.Done) {
-            nextState();
+            state = State.TransitionOn;
         }
     }
-    private void UpdateTransitionOn()
+    public override void UpdateTransitionOn()
     {
         // pass
-        nextState();
+        state = State.On;
     }
 
-    private  void UpdateTransitionOff()
+    public override void UpdateTransitionOff()
     {
-        UpdateTransition(transitionOffTimer, State.Off);
+        base.UpdateTransitionOff();
         nextCallTimer.Set(Random.Range(15, 45));
     }
 }
