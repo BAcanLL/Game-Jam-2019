@@ -104,7 +104,7 @@ public class InteractiveController : MonoBehaviour {
     }
 
     //Runs continually when the state is on
-    public void UpdateOn()
+    public virtual void UpdateOn()
     {
         // Only activates once, switches us to an activating state
         if (collidingWithPlayer && Input.GetKeyDown(activeKey))
@@ -116,7 +116,7 @@ public class InteractiveController : MonoBehaviour {
 
     /* Runs continually when state is off
      */
-    public void UpdateOff()
+    public virtual void UpdateOff()
     {
         // Only activates once, switches us to an activating state
         if(collidingWithPlayer && Input.GetKeyDown(activeKey))
@@ -147,7 +147,7 @@ public class InteractiveController : MonoBehaviour {
         }
     } */
 
-    public void UpdateTransitionOn()
+    public virtual void UpdateTransitionOn()
     {
         if (collidingWithPlayer)
         {
@@ -163,7 +163,7 @@ public class InteractiveController : MonoBehaviour {
         }
     }
 
-    public void UpdateTransitionOff()
+    public virtual void UpdateTransitionOff()
     {
         if (collidingWithPlayer)
         {
