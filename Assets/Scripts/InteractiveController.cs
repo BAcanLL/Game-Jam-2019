@@ -21,7 +21,7 @@ public class InteractiveController : MonoBehaviour {
     protected Timer transitionOnTimer;
     protected Timer transitionOffTimer;
     private KeyCode activeKey;
-    private bool collidingWithPlayer = false, startTransition = false;
+    private bool collidingWithPlayer = false;
 	
     protected void nextState() {
         if (state == State.TransitionOff)
@@ -71,8 +71,8 @@ public class InteractiveController : MonoBehaviour {
 
     protected void Init(
         State initialState=State.Off,
-        float transitionOnTime=2,
-        float transitionOffTime=2,
+        float transitionOnTime=0,
+        float transitionOffTime=0,
         KeyCode key=KeyCode.Space)
     {
         state = initialState;
@@ -149,20 +149,14 @@ public class InteractiveController : MonoBehaviour {
     {
         if (collidingWithPlayer)
         {
-            if (!startTransition && Input.GetKeyDown(activeKey))
-            {
-                startTransition = true;
-            }
-
-            if (startTransition && Input.GetKey(activeKey))
+            if (Input.GetKey(activeKey))
             {
                 transitionOnTimer.Update();
             }
         }
 
         if (transitionOnTimer.Done)
-        {
-            startTransition = false;
+        {          
             state = State.On;
         }
     }
@@ -171,12 +165,7 @@ public class InteractiveController : MonoBehaviour {
     {
         if (collidingWithPlayer)
         {
-            if (!startTransition && Input.GetKeyDown(activeKey))
-            {
-                startTransition = true;
-            }
-
-            if (startTransition && Input.GetKey(activeKey))
+            if (Input.GetKey(activeKey))
             {
                 transitionOffTimer.Update();
             }
@@ -184,7 +173,6 @@ public class InteractiveController : MonoBehaviour {
 
         if (transitionOffTimer.Done)
         {
-            startTransition = false;
             state = State.Off;
         }
     }
