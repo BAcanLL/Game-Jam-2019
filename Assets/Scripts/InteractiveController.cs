@@ -18,8 +18,8 @@ public class InteractiveController : MonoBehaviour {
     }
 
     protected State state;
-    private Timer transitionOnTimer;
-    private Timer transitionOffTimer;
+    protected Timer transitionOnTimer;
+    protected Timer transitionOffTimer;
     private KeyCode activeKey;
     private bool collidingWithPlayer = false, startTransition = false;
 	
@@ -29,7 +29,12 @@ public class InteractiveController : MonoBehaviour {
             state = State.Off;
         }
         else state++;
+<<<<<<< HEAD
         Debug.Log(state);
+=======
+
+        Debug.Log("TIME TIL NEXT CALL: " + state);
+>>>>>>> refs/remotes/origin/master
     }
 
 	// Update is called once per frame
@@ -125,9 +130,13 @@ public class InteractiveController : MonoBehaviour {
         }
     }
     
+<<<<<<< HEAD
     // Not sure why UpdateTransition doesn't work
 
     /* private void UpdateTransition(Timer timer, State toState)
+=======
+    protected void UpdateTransition(Timer timer, State toState)
+>>>>>>> refs/remotes/origin/master
     {
         if (collidingWithPlayer && Input.GetKeyDown(activeKey))
         {
