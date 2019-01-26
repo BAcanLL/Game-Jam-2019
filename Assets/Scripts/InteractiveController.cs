@@ -13,104 +13,120 @@ public class InteractiveController : MonoBehaviour {
     {
         On,
         Off,
-        Activating
+        TransitionOn,
+        TransitionOff
     }
 
-    protected GameObject gObj;
     protected State state;
-    private Timer activatingTimer;
-    private Timer activeTimer;
+    private Timer transitionOnTimer;
+    private Timer transitionOffTimer;
     private KeyCode activeKey;
 
 	// Use this for initialization
-	void Start () {
-        state = State.Off;
-        activatingTimer = new Timer(0);
-        activeTimer = new Timer(1);
-        activeKey = KeyCode.Space;
-	}
+	void Start () {}
 	
 	// Update is called once per frame
 	void Update () {
 		if(state == State.On)
         {
-            UpdateActive();
+            UpdateOn();
         }
-        else if(state == State.Off || state == State.Activating)
+        else if(state == State.Off)
         {
-            UpdateInactive();
+            UpdateOff();
         }
-	}
+        else if(state == State.TransitionOn)
+        {
+            UpdateTransitionOn();
+        }
+        else if (state == State.TransitionOff)
+        {
+            UpdateTransitionOff();
+        }
+    }
 
     public void Init(
-        string objectName, 
         State initialState=State.Off,
-        float activationDelay=0,
-        float activatedTime=0,
+        float transitionOnTime=0,
+        float transitionOffTime=0,
         KeyCode key=KeyCode.Space)
     {
-        gObj = GameObject.Find(objectName);
         state = initialState;
-        activatingTimer = new Timer(activationDelay);
-        activeTimer = new Timer(activatedTime);
+        transitionOffTimer = new Timer(transitionOffTime);
+        transitionOnTimer = new Timer(transitionOnTime);
         activeKey = key;
     }
 
     // Run when the state changes to on
-    public void OnActivate()
+    public void StartOn()
     {
     }
 
     // Run when the state changes to off
-    public void OnDeactivate()
+    public void StartOff()
+    {
+    }
+
+    // Run when the state changes to transition on
+    public void StartTransitionOn()
+    {
+    }
+
+    // Run when the state changes to transition off
+    public void StartTransitionOff()
     {
     }
 
     //Runs continually when the state is active
-    public void UpdateActive()
+    public void UpdateOn()
     {
-        // Once the active state is done running, stop
-        if(activeTimer.Done)
+        // Only activates once, switches us to an activating state
+        if (Input.GetKeyDown(activeKey))
         {
-            state = State.Off;
-        }
-        else
-        {
-            activeTimer.Update();
+            transitionOffTimer.Reset();
+            state = State.TransitionOff;
+            StartTransitionOff();
         }
     }
 
     /* Runs continually when state is off
-     * Handles checking length of time activate button has been pressed
      */
-    public void UpdateInactive()
+    public void UpdateOff()
     {
         // Only activates once, switches us to an activating state
         if(Input.GetKeyDown(activeKey))
         {
-            activatingTimer.Reset();
-            state = State.Activating;
+            transitionOnTimer.Reset();
+            state = State.TransitionOn;
+            StartTransitionOn();
         }
-
-        // If we're activating and the user is still pressing the button then we'll turn to the on state
-        if(state == State.Activating && Input.GetKey(activeKey))
+    }
+    
+    private void UpdateTransition(Timer timer, State toState)
+    {
+        if (Input.GetKey(activeKey))
         {
             // Check if we're past any delay time
-            if(activatingTimer.Done)
+            if (timer.Done)
             {
-                state = State.On;
-                activeTimer.Reset();
-                OnActivate();
+                state = toState;
+                if (state == State.On) StartOn();
+                else StartOff();
             }
             else
             {
-                activatingTimer.Update();
+                timer.Update();
             }
         }
-        // Otherwise the button wasn't held down long enough and the item deactivates
-        else
-        {
-            state = State.Off;
-        }
+    }
+
+    public void UpdateTransitionOn()
+    {
+        UpdateTransition(transitionOnTimer, State.On);
+    }
+
+    public void UpdateTransitionOff()
+    {
+        UpdateTransition(transitionOffTimer, State.Off);
     }
 }

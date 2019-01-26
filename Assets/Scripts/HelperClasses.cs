@@ -34,7 +34,7 @@ public class Timer
     {
         time += Time.deltaTime;
 
-        if (time > presetTime)
+        if (time >= presetTime)
         {
             Done = true;
         }
