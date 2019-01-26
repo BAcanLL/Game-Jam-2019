@@ -11,9 +11,9 @@ public class InteractiveController : MonoBehaviour {
 
     public enum State
     {
-        On,
         Off,
         TransitionOn,
+        On,
         TransitionOff
     }
 
@@ -23,6 +23,13 @@ public class InteractiveController : MonoBehaviour {
     private KeyCode activeKey;
     private bool collidingWithPlayer = false;
 	
+    protected void nextState() {
+        if(state == State.TransitionOff) {
+            state = State.Off;
+        }
+        else state++;
+    }
+
 	// Update is called once per frame
 	protected void Update () {
 		if(state == State.On)
@@ -98,8 +105,7 @@ public class InteractiveController : MonoBehaviour {
         if (collidingWithPlayer && Input.GetKeyDown(activeKey))
         {
             transitionOffTimer.Reset();
-            state = State.TransitionOff;
-            StartTransitionOff();
+            nextState();
         }
     }
 
@@ -111,8 +117,7 @@ public class InteractiveController : MonoBehaviour {
         if(collidingWithPlayer && Input.GetKeyDown(activeKey))
         {
             transitionOnTimer.Reset();
-            state = State.TransitionOn;
-            StartTransitionOn();
+            nextState();
         }
     }
     
@@ -124,8 +129,7 @@ public class InteractiveController : MonoBehaviour {
             if (timer.Done)
             {
                 state = toState;
-                if (state == State.On) StartOn();
-                else StartOff();
+                nextState();
             }
             else
             {
