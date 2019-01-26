@@ -15,7 +15,7 @@ public class MCController : MonoBehaviour
     private KeyCode dMoveKey;
     private Vector2 newMoveDir;
     private enum Direction { front, back, left, right, none };
-    private Direction facing = Direction.front, moving = Direction.front, cantMove = Direction.none;
+    private Direction facing = Direction.front;
 
     // Animation vars
     private Animator anim;
@@ -47,24 +47,20 @@ public class MCController : MonoBehaviour
         if (Input.GetKey(lMoveKey))
         {
             newMoveDir += new Vector2(-1, 0);
-            moving = Direction.left;
         }
         if (Input.GetKey(rMoveKey))
         {
             newMoveDir += new Vector2(1, 0);
-            moving = Direction.right;
         }
         if (Input.GetKey(uMoveKey))
         {
             newMoveDir += new Vector2(0, 1);
             facing = Direction.back;
-            moving = facing;
         }
         if (Input.GetKey(dMoveKey))
         {
             newMoveDir += new Vector2(0, -1);
             facing = Direction.front;
-            moving = facing;
         }
 
         // Play walking animations
@@ -89,23 +85,27 @@ public class MCController : MonoBehaviour
         newMoveDir.Normalize();
         newMoveDir *= speed;
 
-        if(moving != cantMove)
-            transform.Translate(newMoveDir);       
+        Move(newMoveDir);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void Move(Vector2 newMoveDir)
     {
-        if (collision.gameObject.CompareTag("Furniture"))
-        {
-            cantMove = moving;
-        }
-    }
+        Vector2 pos = (Vector2)transform.position + GetComponent<BoxCollider2D>().offset;
 
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Furniture"))
+        int layMask = 1 << 8; // Layer mask for environment layer
+
+        RaycastHit2D hitX = Physics2D.Raycast(pos, new Vector2(newMoveDir.x,0), 0.75f, layMask);
+        RaycastHit2D hitY = Physics2D.Raycast(pos, new Vector2(0, newMoveDir.y), 0.5f, layMask);
+
+        if (hitX.collider != null)
         {
-            cantMove = Direction.none;
+            newMoveDir = new Vector2(0, newMoveDir.y);
         }
+        if (hitY.collider != null)
+        {
+            newMoveDir = new Vector2(newMoveDir.x, 0);
+        }
+
+        transform.Translate(newMoveDir);
     }
 }
