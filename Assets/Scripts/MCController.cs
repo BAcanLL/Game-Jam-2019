@@ -4,23 +4,29 @@ using UnityEngine;
 
 public class MCController : MonoBehaviour
 {
-
+    // Player
     private GameObject player;
+
+    // Movement vars
+    public float speed = 0.1f;
     private KeyCode lMoveKey;
     private KeyCode rMoveKey;
     private KeyCode uMoveKey;
     private KeyCode dMoveKey;
-    public float speed = 0.1f;
-    Vector2 newMoveDir;
+    private Vector2 newMoveDir;
+    private enum Direction { front, back };
+    private Direction facing = Direction.front;
 
+    // Animation vars
     private Animator anim;
 
+    // Physics vars
     private Rigidbody2D pRBody;
 
     // Use this for initialization
     void Start()
     {
-        // Init components
+        // Init component references
         player = GameObject.Find("Player");
         anim = GetComponent<Animator>();
         pRBody = GetComponent<Rigidbody2D>();
@@ -35,8 +41,8 @@ public class MCController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(newMoveDir);
         newMoveDir = Vector2.zero;
+
         // Add any movement vectors the player input
         if (Input.GetKey(lMoveKey))
         {
@@ -49,24 +55,38 @@ public class MCController : MonoBehaviour
         if (Input.GetKey(uMoveKey))
         {
             newMoveDir += new Vector2(0, 1);
-            anim.Play("Walk_back");
+            facing = Direction.back;
         }
         if (Input.GetKey(dMoveKey))
         {
             newMoveDir += new Vector2(0, -1);
-            anim.Play("Walk_front");
+            facing = Direction.front;
         }
+
+        // Play walking animations
+        if(newMoveDir != Vector2.zero)
+        {
+            if (facing == Direction.front)
+                anim.Play("Walk_front");
+            else if (facing == Direction.back)
+                anim.Play("Walk_back");
+        }
+
+        //Idle when no inputs
         if (!Input.anyKey)
         {
             pRBody.velocity = Vector2.zero;
-            anim.Play("Idle");
+            if (facing == Direction.front)
+                anim.Play("Idle_front");
+            else if (facing == Direction.back)
+                anim.Play("Idle_back");
         }
 
         newMoveDir.Normalize();
         newMoveDir *= speed;
 
-        //pRBody.AddForce(newMoveDir);
-
         transform.Translate(newMoveDir);
+
+        
     }
 }
