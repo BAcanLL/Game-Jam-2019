@@ -17,14 +17,16 @@ public class InteractiveController : MonoBehaviour {
         TransitionOff
     }
 
+    public bool Done { get; protected set; }
     protected State state;
-    private Timer transitionOnTimer;
-    private Timer transitionOffTimer;
+    protected Timer transitionOnTimer;
+    protected Timer transitionOffTimer;
     private KeyCode activeKey;
     private bool collidingWithPlayer = false;
 	
     protected void nextState() {
-        if(state == State.TransitionOff) {
+        if (state == State.TransitionOff)
+        {
             state = State.Off;
         }
         else state++;
@@ -48,17 +50,19 @@ public class InteractiveController : MonoBehaviour {
         {
             UpdateTransitionOff();
         }
+        // Debug.Log(state);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.CompareTag("Player"))
         {
             collidingWithPlayer = true;
+            // Debug.Log("collide");
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -76,6 +80,7 @@ public class InteractiveController : MonoBehaviour {
         transitionOffTimer = new Timer(transitionOffTime);
         transitionOnTimer = new Timer(transitionOnTime);
         activeKey = key;
+        Done = false;
     }
 
     // Run when the state changes to on
@@ -98,32 +103,36 @@ public class InteractiveController : MonoBehaviour {
     {
     }
 
-    //Runs continually when the state is active
-    public void UpdateOn()
+    //Runs continually when the state is on
+    public virtual void UpdateOn()
     {
         // Only activates once, switches us to an activating state
         if (collidingWithPlayer && Input.GetKeyDown(activeKey))
         {
             transitionOffTimer.Reset();
-            nextState();
+            state = State.TransitionOff;
         }
     }
 
     /* Runs continually when state is off
      */
-    public void UpdateOff()
+    public virtual void UpdateOff()
     {
         // Only activates once, switches us to an activating state
         if(collidingWithPlayer && Input.GetKeyDown(activeKey))
         {
             transitionOnTimer.Reset();
-            nextState();
+            state = State.TransitionOn;
         }
     }
     
-    private void UpdateTransition(Timer timer, State toState)
+
+    // Not sure why UpdateTransition doesn't work
+    /*
+    protected void UpdateTransition(Timer timer, State toState)
+
     {
-        if (collidingWithPlayer && Input.GetKey(activeKey))
+        if (collidingWithPlayer && Input.GetKeyDown(activeKey))
         {
             // Check if we're past any delay time
             if (timer.Done)
@@ -136,15 +145,37 @@ public class InteractiveController : MonoBehaviour {
                 timer.Update();
             }
         }
+    } */
+
+    public virtual void UpdateTransitionOn()
+    {
+        if (collidingWithPlayer)
+        {
+            if (Input.GetKey(activeKey))
+            {
+                transitionOnTimer.Update();
+            }
+        }
+
+        if (transitionOnTimer.Done)
+        {          
+            state = State.On;
+        }
     }
 
-    public void UpdateTransitionOn()
+    public virtual void UpdateTransitionOff()
     {
-        UpdateTransition(transitionOnTimer, State.On);
-    }
+        if (collidingWithPlayer)
+        {
+            if (Input.GetKey(activeKey))
+            {
+                transitionOffTimer.Update();
+            }
+        }
 
-    public void UpdateTransitionOff()
-    {
-        UpdateTransition(transitionOffTimer, State.Off);
+        if (transitionOffTimer.Done)
+        {
+            state = State.Off;
+        }
     }
 }
