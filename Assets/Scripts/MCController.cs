@@ -14,8 +14,8 @@ public class MCController : MonoBehaviour
     private KeyCode uMoveKey;
     private KeyCode dMoveKey;
     private Vector2 newMoveDir;
-    private enum Direction { front, back };
-    private Direction facing = Direction.front;
+    private enum Direction { front, back, left, right, none };
+    private Direction facing = Direction.front, moving = Direction.front, cantMove = Direction.none;
 
     // Animation vars
     private Animator anim;
@@ -47,20 +47,24 @@ public class MCController : MonoBehaviour
         if (Input.GetKey(lMoveKey))
         {
             newMoveDir += new Vector2(-1, 0);
+            moving = Direction.left;
         }
         if (Input.GetKey(rMoveKey))
         {
             newMoveDir += new Vector2(1, 0);
+            moving = Direction.right;
         }
         if (Input.GetKey(uMoveKey))
         {
             newMoveDir += new Vector2(0, 1);
             facing = Direction.back;
+            moving = facing;
         }
         if (Input.GetKey(dMoveKey))
         {
             newMoveDir += new Vector2(0, -1);
             facing = Direction.front;
+            moving = facing;
         }
 
         // Play walking animations
@@ -85,8 +89,23 @@ public class MCController : MonoBehaviour
         newMoveDir.Normalize();
         newMoveDir *= speed;
 
-        transform.Translate(newMoveDir);
+        if(moving != cantMove)
+            transform.Translate(newMoveDir);       
+    }
 
-        
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Furniture"))
+        {
+            cantMove = moving;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Furniture"))
+        {
+            cantMove = Direction.none;
+        }
     }
 }
