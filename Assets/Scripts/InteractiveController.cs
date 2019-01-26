@@ -17,6 +17,7 @@ public class InteractiveController : MonoBehaviour {
         TransitionOff
     }
 
+    public bool Done { get; protected set; }
     protected State state;
     protected Timer transitionOnTimer;
     protected Timer transitionOffTimer;
@@ -79,6 +80,7 @@ public class InteractiveController : MonoBehaviour {
         transitionOffTimer = new Timer(transitionOffTime);
         transitionOnTimer = new Timer(transitionOnTime);
         activeKey = key;
+        Done = false;
     }
 
     // Run when the state changes to on
