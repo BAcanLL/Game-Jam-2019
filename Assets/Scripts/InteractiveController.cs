@@ -18,8 +18,8 @@ public class InteractiveController : MonoBehaviour {
     }
 
     protected State state;
-    private Timer transitionOnTimer;
-    private Timer transitionOffTimer;
+    protected Timer transitionOnTimer;
+    protected Timer transitionOffTimer;
     private KeyCode activeKey;
     private bool collidingWithPlayer = false;
 	
@@ -28,6 +28,8 @@ public class InteractiveController : MonoBehaviour {
             state = State.Off;
         }
         else state++;
+
+        Debug.Log("TIME TIL NEXT CALL: " + state);
     }
 
 	// Update is called once per frame
@@ -121,7 +123,7 @@ public class InteractiveController : MonoBehaviour {
         }
     }
     
-    private void UpdateTransition(Timer timer, State toState)
+    protected void UpdateTransition(Timer timer, State toState)
     {
         if (collidingWithPlayer && Input.GetKey(activeKey))
         {
