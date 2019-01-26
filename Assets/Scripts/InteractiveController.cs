@@ -50,7 +50,7 @@ public class InteractiveController : MonoBehaviour {
         {
             UpdateTransitionOff();
         }
-        Debug.Log(state);
+        // Debug.Log(state);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -58,7 +58,7 @@ public class InteractiveController : MonoBehaviour {
         if(collision.gameObject.CompareTag("Player"))
         {
             collidingWithPlayer = true;
-            Debug.Log("collide");
+            // Debug.Log("collide");
         }
     }
 
