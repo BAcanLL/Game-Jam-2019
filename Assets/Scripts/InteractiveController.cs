@@ -16,19 +16,17 @@ public class InteractiveController : MonoBehaviour {
         Activating
     }
 
-    private GameObject gObj;
-    private State state;
-    private float activeDelay;
-    private float timeStartActivating;
-    private float timeStartActive;
-    private float activatedTime;
+    protected GameObject gObj;
+    protected State state;
+    private Timer activatingTimer;
+    private Timer activeTimer;
     private KeyCode activeKey;
 
 	// Use this for initialization
 	void Start () {
         state = State.Off;
-        activeDelay = 0;
-        activatedTime = 1;
+        activatingTimer = new Timer(0);
+        activeTimer = new Timer(1);
         activeKey = KeyCode.Space;
 	}
 	
@@ -47,21 +45,20 @@ public class InteractiveController : MonoBehaviour {
     public void Init(
         string objectName, 
         State initialState=State.Off,
-        float delay=0,
-        float activatedTime0=0,
+        float activationDelay=0,
+        float activatedTime=0,
         KeyCode key=KeyCode.Space)
     {
         gObj = GameObject.Find(objectName);
         state = initialState;
-        activeDelay = delay;
-        activatedTime = activatedTime0;
+        activatingTimer = new Timer(activationDelay);
+        activeTimer = new Timer(activatedTime);
         activeKey = key;
     }
 
     // Run when the state changes to on
     public void OnActivate()
     {
-        timeStartActive = Time.time;
     }
 
     // Run when the state changes to off
@@ -73,9 +70,13 @@ public class InteractiveController : MonoBehaviour {
     public void UpdateActive()
     {
         // Once the active state is done running, stop
-        if(activatedTime < Time.time - timeStartActive)
+        if(activeTimer.Done)
         {
             state = State.Off;
+        }
+        else
+        {
+            activeTimer.Update();
         }
     }
 
@@ -87,7 +88,7 @@ public class InteractiveController : MonoBehaviour {
         // Only activates once, switches us to an activating state
         if(Input.GetKeyDown(activeKey))
         {
-            timeStartActivating = Time.time;
+            activatingTimer.Reset();
             state = State.Activating;
         }
 
@@ -95,10 +96,15 @@ public class InteractiveController : MonoBehaviour {
         if(state == State.Activating && Input.GetKey(activeKey))
         {
             // Check if we're past any delay time
-            if(activeDelay < Time.time - timeStartActivating)
+            if(activatingTimer.Done)
             {
                 state = State.On;
+                activeTimer.Reset();
                 OnActivate();
+            }
+            else
+            {
+                activatingTimer.Update();
             }
         }
         // Otherwise the button wasn't held down long enough and the item deactivates
