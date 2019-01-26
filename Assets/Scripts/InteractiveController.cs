@@ -21,6 +21,7 @@ public class InteractiveController : MonoBehaviour {
     private Timer transitionOnTimer;
     private Timer transitionOffTimer;
     private KeyCode activeKey;
+    private bool collidingWithPlayer = false;
 
 	// Use this for initialization
 	void Start () {}
@@ -42,6 +43,22 @@ public class InteractiveController : MonoBehaviour {
         else if (state == State.TransitionOff)
         {
             UpdateTransitionOff();
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Player"))
+        {
+            collidingWithPlayer = true;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collidingWithPlayer = false;
         }
     }
 
@@ -81,7 +98,7 @@ public class InteractiveController : MonoBehaviour {
     public void UpdateOn()
     {
         // Only activates once, switches us to an activating state
-        if (Input.GetKeyDown(activeKey))
+        if (collidingWithPlayer && Input.GetKeyDown(activeKey))
         {
             transitionOffTimer.Reset();
             state = State.TransitionOff;
@@ -94,7 +111,7 @@ public class InteractiveController : MonoBehaviour {
     public void UpdateOff()
     {
         // Only activates once, switches us to an activating state
-        if(Input.GetKeyDown(activeKey))
+        if(collidingWithPlayer && Input.GetKeyDown(activeKey))
         {
             transitionOnTimer.Reset();
             state = State.TransitionOn;
@@ -104,7 +121,7 @@ public class InteractiveController : MonoBehaviour {
     
     private void UpdateTransition(Timer timer, State toState)
     {
-        if (Input.GetKey(activeKey))
+        if (collidingWithPlayer && Input.GetKey(activeKey))
         {
             // Check if we're past any delay time
             if (timer.Done)
