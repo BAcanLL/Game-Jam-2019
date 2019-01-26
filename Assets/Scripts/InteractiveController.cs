@@ -22,12 +22,9 @@ public class InteractiveController : MonoBehaviour {
     private Timer transitionOffTimer;
     private KeyCode activeKey;
     private bool collidingWithPlayer = false;
-
-	// Use this for initialization
-	void Start () {}
 	
 	// Update is called once per frame
-	void Update () {
+	protected void Update () {
 		if(state == State.On)
         {
             UpdateOn();
@@ -62,7 +59,7 @@ public class InteractiveController : MonoBehaviour {
         }
     }
 
-    public void Init(
+    protected void Init(
         State initialState=State.Off,
         float transitionOnTime=0,
         float transitionOffTime=0,
