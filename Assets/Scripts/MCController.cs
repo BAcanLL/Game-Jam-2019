@@ -169,6 +169,25 @@ public class MCController : MonoBehaviour
         }
     }
 
+    public void ConsumeItem()
+    {
+        if(pickedUpItem)
+        {
+            items.Remove(pickedUpItem);
+            Object.Destroy(pickedUpItem);
+            pickedUpItem = null;
+        }
+    }
+
+    public string GetHeldItemName()
+    {
+        if(pickedUpItem)
+        {
+            return pickedUpItem.name;
+        }
+        return "";
+    }
+
     public void PlayTaskComplete(bool success)
     {
         string animName = "No_anim";

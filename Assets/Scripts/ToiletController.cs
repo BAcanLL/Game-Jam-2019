@@ -22,7 +22,7 @@ public class ToiletController : InteractiveController
     private bool hasPlunger() {
         MCController player = GameObject.Find("Player").GetComponent<MCController>();
 
-        if(player.pickedUpItem && player.pickedUpItem.name == "Plunger") {
+        if(player.GetHeldItemName() == "Plunger") {
             // Debug.Log("HAS PLUNGER");
             return true;
         }
