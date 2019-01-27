@@ -192,7 +192,7 @@ public class TaskController : MonoBehaviour
     {
         RemoveFinishedTasks();
 
-        productivity.text = "Productvity: \n" + tasksComplete + " Tasks complete";
+        productivity.text = "Productivity: \n" + tasksComplete + " Tasks complete";
     }
 
     private void AddTask(Task task)
