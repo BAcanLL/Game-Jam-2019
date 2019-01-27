@@ -17,7 +17,7 @@ public class InteractiveController : MonoBehaviour {
         TransitionOff
     }
 
-    public bool Done { get; protected set; }
+    public bool Done;
     protected State state;
     protected Timer transitionOnTimer;
     protected Timer transitionOffTimer;
@@ -50,7 +50,6 @@ public class InteractiveController : MonoBehaviour {
         {
             UpdateTransitionOff();
         }
-        // Debug.Log(state);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -58,7 +57,6 @@ public class InteractiveController : MonoBehaviour {
         if(collision.gameObject.CompareTag("Player"))
         {
             collidingWithPlayer = true;
-            // Debug.Log("collide");
         }
     }
 
@@ -179,8 +177,19 @@ public class InteractiveController : MonoBehaviour {
         }
     }
 
+    public void TurnOn()
+    {
+        state = State.On;
+    }
+
+    public void TurnOff()
+    {
+        state = State.Off;
+    }
+
     public virtual void SelfDestruct()
     {
         Destroy(this);
     }
+
 }

@@ -27,7 +27,7 @@ public abstract class Task
         objects.Add(obj);
     }
 
-    public bool IsDone()
+    public virtual bool IsDone()
     {
         bool done = true;
 
@@ -87,7 +87,7 @@ public class StorageTask : Task
         obj.AddComponent<StorageController>();
     }
 
-    public bool IsDone()
+    public override bool IsDone()
     {
         for (int i = 0; i < objects.Count; ++i)
         {
@@ -110,6 +110,7 @@ public class StorageTask : Task
         for (int i = 0; i < storageObjects.Length; ++i)
         {
             AddObject(storageObjects[i]);
+            storageObjects[i].GetComponent<InteractiveController>().TurnOn();
         }
     }
 
@@ -202,12 +203,15 @@ public class TaskController : MonoBehaviour
 
         // Phone task
         TelephoneTask pickupPhone = new TelephoneTask("phone", "pick up phone");
-        // makeBed.AddObject(GameObject.Find("Bed"));
+<<<<<<< HEAD
+        pickupPhone.AddObject(GameObject.Find("Telephone"));
+=======
+>>>>>>> e89109c1e06994e8e0786f0c8771a96b5db78934
         AddTask(pickupPhone);
 
         // Toilet task
         ToiletTask unclogToilet = new ToiletTask("toilet", "unclog toilet");
-        // makeBed.AddObject(GameObject.Find("Bed"));
+        unclogToilet.AddObject(GameObject.Find("Toilet"));
         AddTask(unclogToilet);
 
         newTaskTimer.Reset();

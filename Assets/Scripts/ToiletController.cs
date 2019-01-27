@@ -57,7 +57,6 @@ public class ToiletController : InteractiveController
     {
         // Only activates once, switches us to an activating state
         if (collidingWithPlayer && Input.GetKeyDown(activeKey) && hasPlunger()) {
-            Debug.Log("GOTTEM");
             state = State.TransitionOff;
         }
     }
@@ -65,6 +64,7 @@ public class ToiletController : InteractiveController
     public override void UpdateTransitionOff()
     {
         base.UpdateTransitionOff();
+        Done = true;
         // overflowTimer.Set(Random.Range(15, 45));
     }
 }
