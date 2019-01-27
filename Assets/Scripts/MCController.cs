@@ -26,8 +26,8 @@ public class MCController : MonoBehaviour
     //Game Objects
     private List<GameObject> items;
     public GameObject pickedUpItem;
-    private KeyCode pickUpKey;
-    private KeyCode dropKey;
+    public KeyCode pickUpKey { get; private set; }
+    public KeyCode dropKey { get; private set; }
 
     // Use this for initialization
     void Start()

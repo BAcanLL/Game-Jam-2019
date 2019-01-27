@@ -84,22 +84,22 @@ public class InteractiveController : MonoBehaviour {
     }
 
     // Run when the state changes to on
-    public void StartOn()
+    public virtual void StartOn()
     {
     }
 
     // Run when the state changes to off
-    public void StartOff()
+    public virtual void StartOff()
     {
     }
 
     // Run when the state changes to transition on
-    public void StartTransitionOn()
+    public virtual void StartTransitionOn()
     {
     }
 
     // Run when the state changes to transition off
-    public void StartTransitionOff()
+    public virtual void StartTransitionOff()
     {
     }
 
