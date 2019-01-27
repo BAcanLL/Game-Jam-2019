@@ -11,7 +11,7 @@ public class ToiletController : InteractiveController
 	// Use this for initialization
 	void Start () {
         plungeTime = Random.Range(2, 5);
-        Init(transitionOffTime: plungeTime, key: KeyCode.P);
+        Init(transitionOffTime: plungeTime, key: KeyCode.Space);
         anim = GetComponent<Animator>();
         message = GetComponentInChildren<Text>();
         message.text = "";
@@ -79,6 +79,7 @@ public class ToiletController : InteractiveController
         {
             state = State.Off;
             Done = true;
+            GameObject.Find("Player").GetComponent<MCController>().ConsumeItem();
         }
         // overflowTimer.Set(Random.Range(15, 45));
     }
