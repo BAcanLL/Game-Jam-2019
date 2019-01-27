@@ -123,7 +123,7 @@ public class TaskController : MonoBehaviour
 
         // Bed task
         BedTask makeBed = new BedTask("bed", "make bed");
-        makeBed.AddObject(GaeObject.Find("Bed"));
+        makeBed.AddObject(GameObject.Find("Bed"));
         AddTask(makeBed);
 
         // Phone task

@@ -196,6 +196,7 @@ public class MCController : MonoBehaviour
             animName = "Yes_anim";
 
         Animator animYN = GetComponentsInChildren<Animator>()[1];
+        animYN.GetComponents<AudioSource>()[0].Play();
 
         animYN.Play(animName, -1, 0);
     }
