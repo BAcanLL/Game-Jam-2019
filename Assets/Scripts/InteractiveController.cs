@@ -216,11 +216,12 @@ public class InteractiveController : MonoBehaviour {
         return played;
     }
 
-    public void SpawnPickup(Sprite sprite)
+    public void SpawnPickup(Sprite sprite, string name)
     {
         int index = Random.Range(0, locations.transform.childCount);
         GameObject pickupObj = Instantiate(pickupPrefab, locations.transform.GetChild(index));
         pickupObj.GetComponent<SpriteRenderer>().sprite = sprite;
+        pickupObj.name = name;
     }
 
 }

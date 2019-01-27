@@ -10,8 +10,9 @@ public class StorageController : InteractiveController {
 	void Start () {
         Init();
         pc = GameObject.Find("Player").GetComponent<MCController>();
+
         defaultPickupSprite = Resources.Load<Sprite>("Food");
-        SpawnPickup(defaultPickupSprite);
+        SpawnPickup(defaultPickupSprite, "Food");
     }
 	
 	// Update is called once per frame

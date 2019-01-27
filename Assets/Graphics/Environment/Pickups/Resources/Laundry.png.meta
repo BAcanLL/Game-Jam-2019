@@ -2,7 +2,7 @@ fileFormatVersion: 2
 guid: 88856ad794ff67548b01f395d48233f1
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Laundry_0
+    21300000: Laundry
     21300002: Laundry_1
   externalObjects: {}
   serializedVersion: 7
@@ -86,7 +86,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Laundry_0
+      name: Laundry
       rect:
         serializedVersion: 2
         x: 0
@@ -94,7 +94,7 @@ TextureImporter:
         width: 24
         height: 24
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -114,7 +114,7 @@ TextureImporter:
         width: 24
         height: 24
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

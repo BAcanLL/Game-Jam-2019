@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class TimerController : MonoBehaviour {
 
 
-    public const float GAME_LENGTH = 10.0f; // in minutes
+    public const float GAME_LENGTH = 2.0f; // in minutes
 
 
     private Text timeText;

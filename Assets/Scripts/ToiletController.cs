@@ -17,7 +17,7 @@ public class ToiletController : InteractiveController
         message.text = "";
 
         defaultPickupSprite = Resources.Load<Sprite>("Plunger");
-        SpawnPickup(defaultPickupSprite);
+        SpawnPickup(defaultPickupSprite, "Plunger");
     }
 
     private bool hasPlunger() {
@@ -33,6 +33,8 @@ public class ToiletController : InteractiveController
     // Update is called once per frame
     void Update()
     {
+        if (Done)
+            message.text = "";
         base.Update();
     }
 

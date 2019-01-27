@@ -196,6 +196,7 @@ public class TaskController : MonoBehaviour
         AddTask(doHomework);
         StoreTask(doHomework);
 
+        // Washing machine task
         WashingMachineTask washClothes = new WashingMachineTask("washClothes", "wash clothes");
         washClothes.AddObject(GameObject.Find("WashingMachine"));
         AddTask(washClothes);
@@ -220,6 +221,9 @@ public class TaskController : MonoBehaviour
         TelephoneTask pickupPhone = new TelephoneTask("phone", "pick up phone");
         pickupPhone.AddObject(GameObject.Find("Telephone"));
         AddTask(pickupPhone);
+
+        // Storage task
+        //StorageTask storeTask = new StorageTask("store", "")
 
         newTaskTimer.Reset();
     }
