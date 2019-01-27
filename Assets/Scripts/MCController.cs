@@ -130,7 +130,7 @@ public class MCController : MonoBehaviour
         int layMask = 1 << 8; // Layer mask for environment layer
 
         RaycastHit2D hitX = Physics2D.Raycast(pos, new Vector2(newMoveDir.x,0), 0.75f, layMask);
-        RaycastHit2D hitY = Physics2D.Raycast(pos, new Vector2(0, newMoveDir.y), 0.5f, layMask);
+        RaycastHit2D hitY = Physics2D.Raycast(pos, new Vector2(0, newMoveDir.y), 0.35f, layMask);
 
         if (hitX.collider != null)
         {
