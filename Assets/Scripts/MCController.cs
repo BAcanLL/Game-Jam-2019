@@ -168,4 +168,16 @@ public class MCController : MonoBehaviour
             items.Remove(item);
         }
     }
+
+    public void PlayTaskComplete(bool success)
+    {
+        string animName = "No_anim";
+
+        if (success)
+            animName = "Yes_anim";
+
+        Animator animYN = GetComponentsInChildren<Animator>()[1];
+
+        animYN.Play(animName, -1, 0);
+    }
 }
