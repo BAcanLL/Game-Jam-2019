@@ -26,7 +26,7 @@ public abstract class Task
         objects.Add(obj);
     }
 
-    public bool IsDone()
+    public virtual bool IsDone()
     {
         bool done = true;
 
@@ -86,7 +86,7 @@ public class StorageTask : Task
         obj.AddComponent<StorageController>();
     }
 
-    public bool IsDone()
+    public override bool IsDone()
     {
         for (int i = 0; i < objects.Count; ++i)
         {
@@ -109,6 +109,7 @@ public class StorageTask : Task
         for (int i = 0; i < storageObjects.Length; ++i)
         {
             AddObject(storageObjects[i]);
+            storageObjects[i].GetComponent<InteractiveController>().TurnOn();
         }
     }
 

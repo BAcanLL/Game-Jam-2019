@@ -15,6 +15,7 @@ public class StorageController : InteractiveController {
 	// Update is called once per frame
 	void Update () {
         base.Update();
+        //Debug.Log(gameObject.name + " state: " + state);
 	}
 
     public override void UpdateOn()
@@ -26,6 +27,6 @@ public class StorageController : InteractiveController {
                 Done = true;
                 pc.ConsumeItem();
             }
-        } 
+        }
     }
 }
