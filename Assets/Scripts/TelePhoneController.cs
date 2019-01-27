@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class TelePhoneController : InteractiveController {
+public class TelephoneController : InteractiveController {
  
     private Rigidbody2D pRBody;
     private Timer nextCallTimer;

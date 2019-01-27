@@ -73,6 +73,28 @@ public class BedTask : Task
     }
 }
 
+public class TelephoneTask : Task
+{
+    public TelephoneTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points){}
+
+    public override void AddObject(GameObject obj)
+    {
+        base.AddObject(obj);
+        obj.AddComponent<TelephoneController>();
+    }
+}
+
+public class ToiletTask : Task
+{
+    public ToiletTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points){}
+
+    public override void AddObject(GameObject obj)
+    {
+        base.AddObject(obj);
+        obj.AddComponent<ToiletController>();
+    }
+}
+
 public class TaskController : MonoBehaviour
 {
     private MCController player;
@@ -103,6 +125,16 @@ public class TaskController : MonoBehaviour
         BedTask makeBed = new BedTask("bed", "make bed");
         makeBed.AddObject(GameObject.Find("Bed"));
         AddTask(makeBed);
+
+        // Phone
+        TelephoneTask pickupPhone = new TelephoneTask("phone", "pick up phone");
+        // makeBed.AddObject(GameObject.Find("Bed"));
+        AddTask(pickupPhone);
+
+        // Toilet
+        ToiletTask unclogToilet = new ToiletTask("toilet", "unclog toilet");
+        // makeBed.AddObject(GameObject.Find("Bed"));
+        AddTask(unclogToilet);
     }
 
     public void Update()
