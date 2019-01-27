@@ -18,13 +18,13 @@ public class TelePhoneController : InteractiveController {
 	void Update ()
     {
         base.Update();
-        Debug.Log(state);
+        // Debug.Log(state);
 	}
     public override void UpdateOff()
     {
         // Only activates once, switches us to an activating state
         nextCallTimer.Update();
-        Debug.Log(nextCallTimer.time.ToString());
+        // Debug.Log(nextCallTimer.time.ToString());
         if(nextCallTimer.Done) {
             state = State.TransitionOn;
         }

@@ -22,7 +22,7 @@ public class InteractiveController : MonoBehaviour {
     protected Timer transitionOnTimer;
     protected Timer transitionOffTimer;
     protected KeyCode activeKey;
-    private bool collidingWithPlayer = false;
+    protected bool collidingWithPlayer = false;
 	
     protected void nextState() {
         if (state == State.TransitionOff)
