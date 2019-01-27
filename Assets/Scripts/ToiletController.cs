@@ -15,7 +15,10 @@ public class ToiletController : InteractiveController
         anim = GetComponent<Animator>();
         message = GetComponentInChildren<Text>();
         message.text = "";
-	}
+
+        defaultPickupSprite = Resources.Load<Sprite>("Plunger");
+        SpawnPickup(defaultPickupSprite);
+    }
 
     private bool hasPlunger() {
         MCController player = GameObject.Find("Player").GetComponent<MCController>();

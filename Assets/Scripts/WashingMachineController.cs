@@ -21,6 +21,11 @@ public class WashingMachineController : InteractiveController {
         loads = 0;
         message = GetComponentInChildren<Text>();
         message.text = "";
+
+        defaultPickupSprite = Resources.Load<Sprite>("Laundry_0");
+        SpawnPickup(defaultPickupSprite);
+        SpawnPickup(defaultPickupSprite);
+        SpawnPickup(defaultPickupSprite);
     }
     
     // Update is called once per frame

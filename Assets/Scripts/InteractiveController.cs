@@ -24,6 +24,8 @@ public class InteractiveController : MonoBehaviour {
     protected KeyCode activeKey;
     protected bool collidingWithPlayer = false;
     protected AudioClip defaultSoundClip;
+    protected GameObject pickupPrefab, locations;
+    protected Sprite defaultPickupSprite = null;
 	
     protected void nextState() {
         if (state == State.TransitionOff)
@@ -80,6 +82,9 @@ public class InteractiveController : MonoBehaviour {
         transitionOnTimer = new Timer(transitionOnTime);
         activeKey = key;
         Done = false;
+
+        pickupPrefab = (GameObject)Resources.Load("pickup_prefab");
+        locations = GameObject.Find("Locations");
     }
 
     // Run when the state changes to on
@@ -209,6 +214,13 @@ public class InteractiveController : MonoBehaviour {
         }
 
         return played;
+    }
+
+    public void SpawnPickup(Sprite sprite)
+    {
+        int index = Random.Range(0, locations.transform.childCount);
+        GameObject pickupObj = Instantiate(pickupPrefab, locations.transform.GetChild(index));
+        pickupObj.GetComponent<SpriteRenderer>().sprite = sprite;
     }
 
 }
