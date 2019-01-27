@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Toilet : InteractiveController
+public class ToiletController : InteractiveController
 {
     private Timer overflowTimer;
     private Timer plungeTimer;
