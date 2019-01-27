@@ -6,6 +6,7 @@ public class TelephoneController : InteractiveController {
     private Timer nextCallTimer;
     private float nextCallTime;
     Animator anim;
+    bool dun = false;
 
 	// Use this for initialization
 	void Start () {
@@ -21,18 +22,20 @@ public class TelephoneController : InteractiveController {
     {
         base.Update();
 
-        if (state == State.TransitionOn)
+        if (state == State.TransitionOff)
         {
+            dun = true;
         }
         if (state == State.On)
         {
-        //    Debug.Log(state);
+            //Debug.Log(state);
             anim.Play("On");
         }
         if (state == State.Off)
         {
-          //  Debug.Log(state);
+            //Debug.Log(state);
             anim.Play("Off");
+            if (dun) Done = true;
         }
     }
     public override void UpdateOff()
