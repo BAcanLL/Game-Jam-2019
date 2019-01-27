@@ -21,7 +21,7 @@ public class InteractiveController : MonoBehaviour {
     protected State state;
     protected Timer transitionOnTimer;
     protected Timer transitionOffTimer;
-    private KeyCode activeKey;
+    protected KeyCode activeKey;
     private bool collidingWithPlayer = false;
 	
     protected void nextState() {
@@ -177,5 +177,10 @@ public class InteractiveController : MonoBehaviour {
         {
             state = State.Off;
         }
+    }
+
+    public virtual void SelfDestruct()
+    {
+        Destroy(this);
     }
 }
