@@ -11,6 +11,7 @@ public abstract class Task
     public string Message { get; protected set; }
     public int Points { get; protected set; }
     public GameObject Sticky { get; set; }
+    public GameObject Arrow { get; set; }
 
     public List<GameObject> objects = new List<GameObject>() { };
 
@@ -112,7 +113,7 @@ public class StorageTask : Task
         }
     }
 
-    private void NewCorrectSpot()
+    public void NewCorrectSpot()
     {
         correctSpot = Random.Range(0, objects.Count);
         Message = "put food into the " + objects[correctSpot].name;
@@ -150,7 +151,9 @@ public class TaskController : MonoBehaviour
     private int tasksComplete = 0;
 
     public List<Task> tasks = new List<Task>() { };
-    private GameObject stickyNotePrefab, stickyNoteContainer;
+    private GameObject stickyNotePrefab, stickyNoteContainer, arrowPrefab;
+
+    public static bool GameOver = false;
 
     public void Start()
     {
@@ -158,6 +161,7 @@ public class TaskController : MonoBehaviour
         player = GameObject.Find("Player").GetComponent<MCController>();
         stickyNotePrefab = (GameObject)Resources.Load("Sticky-note-prefab");
         stickyNoteContainer = GameObject.Find("List_of_tasks");
+        arrowPrefab = (GameObject)Resources.Load("Arrow-prefab");
 
         // Homework task
         HomeworkTask doHomework = new HomeworkTask("homework", "do homework");
@@ -176,6 +180,8 @@ public class TaskController : MonoBehaviour
         // Storage Task
         StorageTask storeFood = new StorageTask("store", "put food away");
         storeFood.AddObjects();
+        storeFood.NewCorrectSpot();
+        AddTask(storeFood);
 
         // Phone task
         TelephoneTask pickupPhone = new TelephoneTask("phone", "pick up phone");
@@ -192,7 +198,7 @@ public class TaskController : MonoBehaviour
     {
         RemoveFinishedTasks();
 
-        productivity.text = "Productvity: \n" + tasksComplete + " Tasks complete";
+        productivity.text = "Productivity: \n" + tasksComplete + " Tasks complete";
     }
 
     private void AddTask(Task task)
@@ -202,10 +208,17 @@ public class TaskController : MonoBehaviour
         newNote.GetComponentInChildren<Text>().text = task.Message;
         newNote.transform.SetParent(stickyNoteContainer.transform);
         task.Sticky = newNote;
+
+        foreach (GameObject obj in task.objects)
+        {
+            GameObject newArrow = Instantiate(arrowPrefab, obj.transform);
+            task.Arrow = newArrow;
+        }
     }
 
     private void RemoveFinishedTasks()
     {
+        List<Task> removeList = new List<Task>();
         foreach (Task task in tasks)
         {
             if (task.objects.Count > 0 && task.IsDone())
@@ -219,9 +232,13 @@ public class TaskController : MonoBehaviour
                     obj.GetComponent<InteractiveController>().SelfDestruct();
                 }
 
-                tasks.Remove(task);
+                removeList.Add(task);
                 tasksComplete++;
             }
+        }
+        foreach(Task task in removeList)
+        {
+            tasks.Remove(task);
         }
     }
 
