@@ -23,6 +23,12 @@ public class MCController : MonoBehaviour
     // Physics vars
     private Rigidbody2D pRBody;
 
+    //Game Objects
+    private List<GameObject> items;
+    public GameObject pickedUpItem;
+    private KeyCode pickUpKey;
+    private KeyCode dropKey;
+
     // Use this for initialization
     void Start()
     {
@@ -36,6 +42,11 @@ public class MCController : MonoBehaviour
         uMoveKey = KeyCode.W;
         dMoveKey = KeyCode.S;
         pRBody = player.GetComponent<Rigidbody2D>();
+
+        items = new List<GameObject>();
+        pickedUpItem = null;
+        pickUpKey = KeyCode.E;
+        dropKey = KeyCode.E;
     }
 
     // Update is called once per frame
@@ -86,8 +97,32 @@ public class MCController : MonoBehaviour
         newMoveDir *= speed;
 
         Move(newMoveDir);
+
+        HandleItems();
     }
 
+    private void HandleItems()
+    {
+        if(pickedUpItem)
+        {
+            if(Input.GetKeyDown(dropKey))
+            {
+                PickupController pc = pickedUpItem.GetComponent<PickupController>();
+                pc.user = null;
+                pickedUpItem = null;
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(pickUpKey) && items.Count > 0)
+            {
+                pickedUpItem = items[0];
+                PickupController pc = pickedUpItem.GetComponent<PickupController>();
+                Debug.Log("Pc:" + pc +", picked up item:"+pickedUpItem);
+                pc.user = gameObject;
+            }
+        }
+    }
     private void Move(Vector2 newMoveDir)
     {
         Vector2 pos = (Vector2)transform.position + GetComponent<BoxCollider2D>().offset;
@@ -107,5 +142,30 @@ public class MCController : MonoBehaviour
         }
 
         transform.Translate(newMoveDir);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Pickup"))
+        {
+            items.Add(collision.gameObject);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        List<GameObject> removeList = new List<GameObject>();
+        foreach(GameObject item in items)
+        {
+            if(collision.gameObject.name == item.name)
+            {
+                removeList.Add(item);
+            }
+        }
+
+        foreach(GameObject item in removeList)
+        {
+            items.Remove(item);
+        }
     }
 }
