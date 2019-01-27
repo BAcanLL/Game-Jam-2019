@@ -8,8 +8,8 @@ public abstract class Task
     public const int BASE_POINTS = 10;
 
     public string TaskName { get; private set; }
-    public string Message { get; private set; }
-    public int Points { get; private set; }
+    public string Message { get; protected set; }
+    public int Points { get; protected set; }
     public GameObject Sticky { get; set; }
 
     public List<GameObject> objects = new List<GameObject>() { };
@@ -73,6 +73,53 @@ public class BedTask : Task
     }
 }
 
+public class StorageTask : Task
+{
+    private int correctSpot;
+    public StorageTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points)
+    {
+    }
+
+
+    public override void AddObject(GameObject obj)
+    {
+        base.AddObject(obj);
+        obj.AddComponent<StorageController>();
+    }
+
+    public bool IsDone()
+    {
+        for(int i=0; i < objects.Count; ++i)
+        {
+            if(objects[i].GetComponent<InteractiveController>().Done)
+            {
+                if(i != correctSpot)
+                {
+                    Points /= -2;
+                }
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void AddObjects()
+    {
+        GameObject[] storageObjects = GameObject.FindGameObjectsWithTag("Storage");
+        for (int i = 0; i < storageObjects.Length; ++i)
+        {
+            AddObject(storageObjects[i]);
+        }
+    }
+
+    private void NewCorrectSpot()
+    {
+        correctSpot = Random.Range(0, objects.Count);
+        Message = "put food into the " + objects[correctSpot].name;    
+    }
+}
+
 public class TaskController : MonoBehaviour
 {
     private MCController player;
@@ -103,6 +150,10 @@ public class TaskController : MonoBehaviour
         BedTask makeBed = new BedTask("bed", "make bed");
         makeBed.AddObject(GameObject.Find("Bed"));
         AddTask(makeBed);
+
+        // Storage Task
+        StorageTask storeFood = new StorageTask("store", "put food away");
+        storeFood.AddObjects();
     }
 
     public void Update()
