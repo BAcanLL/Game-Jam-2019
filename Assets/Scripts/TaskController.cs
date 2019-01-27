@@ -11,7 +11,7 @@ public abstract class Task
     public string Message { get; protected set; }
     public int Points { get; protected set; }
     public GameObject Sticky { get; set; }
-    public GameObject Arrow { get; set; }
+    public List<GameObject> arrows = new List<GameObject>();
 
     public List<GameObject> objects = new List<GameObject>() { };
 
@@ -146,13 +146,28 @@ public class ToiletTask : Task
 
 public class TaskController : MonoBehaviour
 {
+    private class StoredTask
+    {
+        public Task task;
+        public List<GameObject> objects = new List<GameObject>();
+
+        public StoredTask(Task task, List<GameObject> objects)
+        {
+            this.task = task;
+            this.objects = objects;
+        }
+    }
+
     private MCController player;
+    private GameObject stickyNotePrefab, stickyNoteContainer, arrowPrefab;
 
     public Text productivity;
     private int tasksComplete = 0;
 
+    private const int MAX_TASKS = 6, NEW_TASK_RATE = 10;
     public List<Task> tasks = new List<Task>() { };
-    private GameObject stickyNotePrefab, stickyNoteContainer, arrowPrefab;
+    private List<StoredTask> futureTasks = new List<StoredTask>() { };
+    private Timer newTaskTimer = new Timer(NEW_TASK_RATE);
 
     public static bool GameOver = false;
 
@@ -168,6 +183,7 @@ public class TaskController : MonoBehaviour
         HomeworkTask doHomework = new HomeworkTask("homework", "do homework");
         doHomework.AddObject(GameObject.Find("Desk"));
         AddTask(doHomework);
+        StoreTask(doHomework);
 
         // Laundry task
         LaundryTask doLaundry = new LaundryTask("laundry", "do laundry");
@@ -177,6 +193,7 @@ public class TaskController : MonoBehaviour
         BedTask makeBed = new BedTask("bed", "make bed");
         makeBed.AddObject(GameObject.Find("Bed"));
         AddTask(makeBed);
+        StoreTask(makeBed);
 
         // Storage Task
         StorageTask storeFood = new StorageTask("store", "put food away");
@@ -196,27 +213,46 @@ public class TaskController : MonoBehaviour
         ToiletTask unclogToilet = new ToiletTask("toilet", "unclog toilet");
         unclogToilet.AddObject(GameObject.Find("Toilet"));
         AddTask(unclogToilet);
+
+        newTaskTimer.Reset();
     }
 
     public void Update()
     {
         RemoveFinishedTasks();
-
         productivity.text = "Productivity: \n" + tasksComplete + " Tasks complete";
+
+        if(newTaskTimer.Done)
+        {
+            newTaskTimer.Reset();
+
+            GenRandTask();
+        }
+
+        newTaskTimer.Update();
+    }
+
+    private void StoreTask(Task task)
+    {
+        StoredTask newTask = new StoredTask(task, task.objects);
+        futureTasks.Add(newTask);
     }
 
     private void AddTask(Task task)
     {
-        tasks.Add(task);
-        GameObject newNote = Instantiate(stickyNotePrefab);
-        newNote.GetComponentInChildren<Text>().text = task.Message;
-        newNote.transform.SetParent(stickyNoteContainer.transform);
-        task.Sticky = newNote;
-
-        foreach (GameObject obj in task.objects)
+        if (tasks.Count < MAX_TASKS)
         {
-            GameObject newArrow = Instantiate(arrowPrefab, obj.transform);
-            task.Arrow = newArrow;
+            tasks.Add(task);
+            GameObject newNote = Instantiate(stickyNotePrefab);
+            newNote.GetComponentInChildren<Text>().text = task.Message;
+            newNote.transform.SetParent(stickyNoteContainer.transform);
+            task.Sticky = newNote;
+
+            foreach (GameObject obj in task.objects)
+            {
+                GameObject newArrow = Instantiate(arrowPrefab, obj.transform);
+                task.arrows.Add(newArrow);
+            }
         }
     }
 
@@ -229,7 +265,12 @@ public class TaskController : MonoBehaviour
             {
                 player.PlayTaskComplete(true);
 
-                Destroy(task.Sticky);
+                Destroy(task.Sticky);    
+                
+                foreach (GameObject arrow in task.arrows)
+                {
+                    Destroy(arrow);
+                }
                 
                 foreach (GameObject obj in task.objects)
                 {
@@ -243,6 +284,35 @@ public class TaskController : MonoBehaviour
         foreach(Task task in removeList)
         {
             tasks.Remove(task);
+        }
+    }
+
+    private void GenRandTask()
+    {
+        if (futureTasks.Count > 0)
+        {
+            int randIndex = Random.Range(0, futureTasks.Count);
+            Task newTask = futureTasks[randIndex].task;
+
+            bool unique = true;
+
+            foreach (GameObject obj in futureTasks[randIndex].objects)
+            {
+                if (obj.GetComponent<InteractiveController>() != null)
+                {
+                    unique = false;
+                }
+            }
+
+            if (unique)
+            {
+                AddTask(newTask);
+
+                foreach (GameObject obj in futureTasks[randIndex].objects)
+                {
+                    newTask.AddObject(obj);
+                }
+            }
         }
     }
 
