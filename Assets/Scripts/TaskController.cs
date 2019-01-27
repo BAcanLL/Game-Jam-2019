@@ -80,7 +80,6 @@ public class StorageTask : Task
     {
     }
 
-
     public override void AddObject(GameObject obj)
     {
         base.AddObject(obj);
@@ -89,11 +88,11 @@ public class StorageTask : Task
 
     public bool IsDone()
     {
-        for(int i=0; i < objects.Count; ++i)
+        for (int i = 0; i < objects.Count; ++i)
         {
-            if(objects[i].GetComponent<InteractiveController>().Done)
+            if (objects[i].GetComponent<InteractiveController>().Done)
             {
-                if(i != correctSpot)
+                if (i != correctSpot)
                 {
                     Points /= -2;
                 }
@@ -116,7 +115,30 @@ public class StorageTask : Task
     private void NewCorrectSpot()
     {
         correctSpot = Random.Range(0, objects.Count);
-        Message = "put food into the " + objects[correctSpot].name;    
+        Message = "put food into the " + objects[correctSpot].name;
+    }
+}
+
+
+public class TelephoneTask : Task
+{
+    public TelephoneTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points) { }
+
+    public override void AddObject(GameObject obj)
+    {
+        base.AddObject(obj);
+        obj.AddComponent<TelephoneController>();
+    }
+}
+
+public class ToiletTask : Task
+{
+    public ToiletTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points){}
+
+    public override void AddObject(GameObject obj)
+    {
+        base.AddObject(obj);
+        obj.AddComponent<ToiletController>();
     }
 }
 
@@ -154,6 +176,16 @@ public class TaskController : MonoBehaviour
         // Storage Task
         StorageTask storeFood = new StorageTask("store", "put food away");
         storeFood.AddObjects();
+
+        // Phone task
+        TelephoneTask pickupPhone = new TelephoneTask("phone", "pick up phone");
+        // makeBed.AddObject(GameObject.Find("Bed"));
+        AddTask(pickupPhone);
+
+        // Toilet task
+        ToiletTask unclogToilet = new ToiletTask("toilet", "unclog toilet");
+        // makeBed.AddObject(GameObject.Find("Bed"));
+        AddTask(unclogToilet);
     }
 
     public void Update()
