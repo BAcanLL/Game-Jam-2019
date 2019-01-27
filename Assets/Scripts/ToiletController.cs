@@ -23,6 +23,7 @@ public class Toilet : InteractiveController
         MCController player = GameObject.Find("Player").GetComponent<MCController>();
 
         if(player.pickedUpItem && player.pickedUpItem.name == "Plunger") {
+            // Debug.Log("HAS PLUNGER");
             return true;
         }
 
@@ -33,14 +34,14 @@ public class Toilet : InteractiveController
     void Update()
     {
         base.Update();
-        Debug.Log(state);
+        // Debug.Log(state);
     }
 
     public override void UpdateOff()
     {
         // Only activates once, switches us to an activating state
         overflowTimer.Update();
-        Debug.Log(overflowTimer.time.ToString());
+        // Debug.Log(overflowTimer.time.ToString());
         if(overflowTimer.Done) {
             state = State.TransitionOn;
         }
@@ -56,6 +57,7 @@ public class Toilet : InteractiveController
     {
         // Only activates once, switches us to an activating state
         if (collidingWithPlayer && Input.GetKeyDown(activeKey) && hasPlunger()) {
+            Debug.Log("GOTTEM");
             state = State.TransitionOff;
         }
     }
@@ -63,6 +65,6 @@ public class Toilet : InteractiveController
     public override void UpdateTransitionOff()
     {
         base.UpdateTransitionOff();
-        overflowTimer.Set(Random.Range(15, 45));
+        // overflowTimer.Set(Random.Range(15, 45));
     }
 }

@@ -38,6 +38,6 @@ public class TelePhoneController : InteractiveController {
     public override void UpdateTransitionOff()
     {
         base.UpdateTransitionOff();
-        nextCallTimer.Set(Random.Range(15, 45));
+        // nextCallTimer.Set(Random.Range(15, 45));
     }
 }
