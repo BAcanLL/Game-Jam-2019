@@ -1,20 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 public class TelephoneController : InteractiveController {
  
-    private Timer nextCallTimer;
-    private float nextCallTime;
+    //private Timer nextCallTimer;
+    //private float nextCallTime;
     Animator anim;
     bool dun = false;
+    private Text message;
+    private string caller;
+    static string[] callers = { "mom", "dad", "grandma", "telemarketer", "friend" };
 
 	// Use this for initialization
 	void Start () {
         Init(/*transitionOffTime: 2*/);
-        nextCallTime = Random.Range(3, 5);
-        nextCallTimer = new Timer(nextCallTime);
+        //nextCallTime = Random.Range(3, 5);
+        //nextCallTimer = new Timer(nextCallTime);
         anim = GetComponent<Animator>();
-        Debug.Log("TIME TIL NEXT CALL: " + nextCallTime);
+        message = GetComponentInChildren<Text>();
+        message.text = "";
+        caller = GetNewCaller();
 	}
 
 	// Update is called once per frame
@@ -36,23 +43,22 @@ public class TelephoneController : InteractiveController {
             //Debug.Log(state);
             anim.Play("Off");
             if (dun) Done = true;
+            message.text = "";
         }
     }
     public override void UpdateOff()
     {
-        // Only activates once, switches us to an activating state
-        nextCallTimer.Update();
-        // Debug.Log(nextCallTimer.time.ToString());
-        if(nextCallTimer.Done) {
-           state = State.On;
-        }
     }
 
     public override void UpdateTransitionOff()
     {
         base.UpdateTransitionOff();
-        //nextCallTime = Random.Range(5, 15);
-        //nextCallTimer.Set(nextCallTime);
-        //Debug.Log("TIME TIL NEXT CALL: " + nextCallTime);
+        message.text = "Calling " + caller + "... " + transitionOffTimer.GetPercentDone();
+    }
+
+    private string GetNewCaller()
+    {
+        int nextCaller = Random.Range(0, 5);
+        return callers[nextCaller];
     }
 }
