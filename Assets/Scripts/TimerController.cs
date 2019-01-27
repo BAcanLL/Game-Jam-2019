@@ -5,33 +5,50 @@ using UnityEngine.UI;
 
 public class TimerController : MonoBehaviour {
 
-    public const float GAME_LENGTH = 1.2f; // in minutes
+    public const float GAME_LENGTH = 0.1f; // in minutes
 
     private Text timeText;
     public Timer masterTimer = new Timer(GAME_LENGTH * 60);
     private int minutes, seconds, milliseconds;
 
+    public GameObject gameOverPanel;
+
 	// Use this for initialization
 	void Start () {
         timeText = GetComponent<Text>();
         masterTimer.Set(GAME_LENGTH * 60);
+        gameOverPanel.SetActive(false);
 }
 	
 	// Update is called once per frame
 	void Update () {
-        masterTimer.Update();
-
-        float timeRemaining = GAME_LENGTH * 60 - masterTimer.time; // in seconds
-
-        minutes = Mathf.FloorToInt(timeRemaining / 60);
-        seconds = Mathf.FloorToInt(timeRemaining % 60);
-        milliseconds = (int)((timeRemaining - Mathf.FloorToInt(timeRemaining)) * 60);
-
-        timeText.text = TimeString(minutes) + ":" + TimeString(seconds) + ":" +TimeString(milliseconds);
-
-        if (timeRemaining < 60)
+        if (masterTimer.Done)
         {
-            timeText.color = Color.red;
+            Time.timeScale = 0;
+
+            TaskController.GameOver = true;
+
+            gameOverPanel.SetActive(true);
+
+            timeText.text = "00:00:00";
+        }
+        else
+        {
+            masterTimer.Update();
+
+
+            float timeRemaining = GAME_LENGTH * 60 - masterTimer.time; // in seconds
+
+            minutes = Mathf.FloorToInt(timeRemaining / 60);
+            seconds = Mathf.FloorToInt(timeRemaining % 60);
+            milliseconds = (int)((timeRemaining - Mathf.FloorToInt(timeRemaining)) * 60);
+
+            timeText.text = TimeString(minutes) + ":" + TimeString(seconds) + ":" + TimeString(milliseconds);
+
+            if (timeRemaining < 60)
+            {
+                timeText.color = Color.red;
+            }
         }
 	}
 
