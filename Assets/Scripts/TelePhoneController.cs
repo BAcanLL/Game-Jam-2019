@@ -15,7 +15,7 @@ public class TelephoneController : InteractiveController {
 
 	// Use this for initialization
 	void Start () {
-        Init(/*transitionOffTime: 2*/);
+        Init(transitionOffTime: 5);
         //nextCallTime = Random.Range(3, 5);
         //nextCallTimer = new Timer(nextCallTime);
         anim = GetComponent<Animator>();
