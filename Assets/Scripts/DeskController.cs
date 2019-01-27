@@ -38,7 +38,6 @@ public class DeskController : InteractiveController {
             {
                 SetMessage(GenRandMsg());
                 msgTimer.Reset();
-                Debug.Log("msg");
             }
 
             msgTimer.Update();
