@@ -23,6 +23,7 @@ public class InteractiveController : MonoBehaviour {
     protected Timer transitionOffTimer;
     protected KeyCode activeKey;
     protected bool collidingWithPlayer = false;
+    protected AudioClip defaultSoundClip;
 	
     protected void nextState() {
         if (state == State.TransitionOff)
@@ -190,6 +191,24 @@ public class InteractiveController : MonoBehaviour {
     public virtual void SelfDestruct()
     {
         Destroy(this);
+    }
+
+    public bool PlaySFX(AudioClip clip)
+    {
+        bool played = false;
+
+        AudioSource source = GetComponent<AudioSource>();
+
+        if (source == null)
+            source = gameObject.AddComponent<AudioSource>();
+
+        if (!source.isPlaying)
+        {
+            source.PlayOneShot(clip);
+            played = true;
+        }
+
+        return played;
     }
 
 }
