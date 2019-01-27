@@ -15,7 +15,6 @@ public class PickupController : MonoBehaviour {
 	void Update () {
         if (user)
         {
-            Debug.Log("Follow");
             Rigidbody2D rBody = gameObject.GetComponent<Rigidbody2D>();
             rBody.MovePosition(user.GetComponent<Rigidbody2D>().position);
         }
