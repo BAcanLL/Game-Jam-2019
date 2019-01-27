@@ -206,6 +206,7 @@ public class TaskController : MonoBehaviour
 
     private void RemoveFinishedTasks()
     {
+        List<Task> removeList = new List<Task>();
         foreach (Task task in tasks)
         {
             if (task.objects.Count > 0 && task.IsDone())
@@ -219,9 +220,13 @@ public class TaskController : MonoBehaviour
                     obj.GetComponent<InteractiveController>().SelfDestruct();
                 }
 
-                tasks.Remove(task);
+                removeList.Add(task);
                 tasksComplete++;
             }
+        }
+        foreach(Task task in removeList)
+        {
+            tasks.Remove(task);
         }
     }
 
