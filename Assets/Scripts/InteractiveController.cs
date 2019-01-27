@@ -178,4 +178,9 @@ public class InteractiveController : MonoBehaviour {
             state = State.Off;
         }
     }
+
+    public virtual void SelfDestruct()
+    {
+        Destroy(this);
+    }
 }

@@ -10,8 +10,6 @@ public class Toilet : InteractiveController
     private float plungeTime;
     // bool hasPlunger = false;
 
-    GameObject player;
-
 	// Use this for initialization
 	void Start () {
         plungeTime = Random.Range(1, 5);
