@@ -1,27 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ToiletController : InteractiveController
 {
-    // private Timer overflowTimer;
-    private float overflowTime;
     private float plungeTime;
-
+    private Text message;
+    private Animator anim;
 	// Use this for initialization
 	void Start () {
-        plungeTime = Random.Range(1, 5);
-        overflowTime = Random.Range(15, 45);
+        plungeTime = Random.Range(2, 5);
         Init(transitionOffTime: plungeTime, key: KeyCode.P);
-        // overflowTimer = new Timer(overflowTime);
-        // Debug.Log("TIME TIL NEXT OVERFLOW: " + overflowTime);
+        anim = GetComponent<Animator>();
+        message = GetComponentInChildren<Text>();
+        message.text = "";
 	}
 
     private bool hasPlunger() {
         MCController player = GameObject.Find("Player").GetComponent<MCController>();
 
         if(player.GetHeldItemName() == "Plunger") {
-            // Debug.Log("HAS PLUNGER");
             return true;
         }
 
@@ -32,11 +31,11 @@ public class ToiletController : InteractiveController
     void Update()
     {
         base.Update();
-        // Debug.Log(state);
     }
 
     public override void UpdateOff()
     {
+        anim.Play("Default");
         state = State.TransitionOn;
         /* 
         // Only activates once, switches us to an activating state
@@ -59,13 +58,28 @@ public class ToiletController : InteractiveController
         // Only activates once, switches us to an activating state
         if (collidingWithPlayer && Input.GetKeyDown(activeKey) && hasPlunger()) {
             state = State.TransitionOff;
+            anim.Play("Flushing");
         }
     }
 
     public override void UpdateTransitionOff()
     {
-        base.UpdateTransitionOff();
-        Done = true;
+        if (collidingWithPlayer)
+        {
+            if (Input.GetKey(activeKey) && hasPlunger())
+            {
+                transitionOffTimer.Update();
+                int percentDone = transitionOffTimer.GetPercentDone();
+                message.text = "toilet plunging:  " + percentDone + "%";
+                anim.Play("Flushing");
+            }
+        }
+
+        if (transitionOffTimer.Done)
+        {
+            state = State.Off;
+            Done = true;
+        }
         // overflowTimer.Set(Random.Range(15, 45));
     }
 }
