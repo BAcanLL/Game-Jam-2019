@@ -123,15 +123,15 @@ public class TaskController : MonoBehaviour
 
         // Bed task
         BedTask makeBed = new BedTask("bed", "make bed");
-        makeBed.AddObject(GameObject.Find("Bed"));
+        makeBed.AddObject(GaeObject.Find("Bed"));
         AddTask(makeBed);
 
-        // Phone
+        // Phone task
         TelephoneTask pickupPhone = new TelephoneTask("phone", "pick up phone");
         // makeBed.AddObject(GameObject.Find("Bed"));
         AddTask(pickupPhone);
 
-        // Toilet
+        // Toilet task
         ToiletTask unclogToilet = new ToiletTask("toilet", "unclog toilet");
         // makeBed.AddObject(GameObject.Find("Bed"));
         AddTask(unclogToilet);
