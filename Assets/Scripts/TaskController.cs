@@ -211,24 +211,16 @@ public class TaskController : MonoBehaviour
         AddTask(makeBed);
         StoreTask(makeBed);
 
-<<<<<<< HEAD
-=======
-        // Phone task
-        //TelephoneTask pickupPhone = new TelephoneTask("phone", "pick up phone");
-        //pickupPhone.AddObject(GameObject.Find("Telephone"));
-        //AddTask(pickupPhone);
-
->>>>>>> ce7957079dcd56b17cb4c585d9302d574750200f
         // Toilet task
         ToiletTask unclogToilet = new ToiletTask("toilet", "unclog toilet");
         unclogToilet.AddObject(GameObject.Find("Toilet"));
         AddTask(unclogToilet);
-/*
+
         // Phone task
         TelephoneTask pickupPhone = new TelephoneTask("phone", "pick up phone");
         pickupPhone.AddObject(GameObject.Find("Telephone"));
         AddTask(pickupPhone);
-*/
+
         newTaskTimer.Reset();
     }
 

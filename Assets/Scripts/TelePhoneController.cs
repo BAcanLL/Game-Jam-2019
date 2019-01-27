@@ -12,16 +12,20 @@ public class TelephoneController : InteractiveController {
     private Text message;
     private string caller;
     static string[] callers = { "mom", "dad", "grandma", "telemarketer", "friend" };
+    private const float RING_DELAY = 0.5f;
+    private Timer ringTimer = new Timer(RING_DELAY);
 
 	// Use this for initialization
 	void Start () {
-        Init(/*transitionOffTime: 2*/);
+        Init(/*transitionOffTime: 2, */ initialState: State.On);
         //nextCallTime = Random.Range(3, 5);
         //nextCallTimer = new Timer(nextCallTime);
         anim = GetComponent<Animator>();
         message = GetComponentInChildren<Text>();
         message.text = "";
         caller = GetNewCaller();
+        defaultSoundClip = (AudioClip)Resources.Load("phone_ring");
+        ringTimer.Reset();
 	}
 
 	// Update is called once per frame
@@ -37,6 +41,14 @@ public class TelephoneController : InteractiveController {
         {
             //Debug.Log(state);
             anim.Play("On");
+
+            if (ringTimer.Done)
+            {
+                PlaySFX(defaultSoundClip);
+                ringTimer.Reset();
+            }
+
+            ringTimer.Update();
         }
         if (state == State.Off)
         {
