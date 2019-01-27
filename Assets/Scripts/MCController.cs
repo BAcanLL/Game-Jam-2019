@@ -118,7 +118,6 @@ public class MCController : MonoBehaviour
             {
                 pickedUpItem = items[0];
                 PickupController pc = pickedUpItem.GetComponent<PickupController>();
-                Debug.Log("Pc:" + pc +", picked up item:"+pickedUpItem);
                 pc.user = gameObject;
             }
         }

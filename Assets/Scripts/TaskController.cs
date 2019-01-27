@@ -144,6 +144,17 @@ public class ToiletTask : Task
     }
 }
 
+public class WashingMachineTask : Task
+{
+    public WashingMachineTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points) { }
+
+    public override void AddObject(GameObject obj)
+    {
+        base.AddObject(obj);
+        obj.AddComponent<WashingMachineController>();
+    }
+}
+
 public class TaskController : MonoBehaviour
 {
     private class StoredTask
@@ -185,6 +196,11 @@ public class TaskController : MonoBehaviour
         AddTask(doHomework);
         StoreTask(doHomework);
 
+        WashingMachineTask washClothes = new WashingMachineTask("washClothes", "wash clothes");
+        washClothes.AddObject(GameObject.Find("WashingMachine"));
+        AddTask(washClothes);
+        StoreTask(washClothes);
+
         // Laundry task
         LaundryTask doLaundry = new LaundryTask("laundry", "do laundry");
         AddTask(doLaundry);
@@ -195,6 +211,14 @@ public class TaskController : MonoBehaviour
         AddTask(makeBed);
         StoreTask(makeBed);
 
+<<<<<<< HEAD
+=======
+        // Phone task
+        //TelephoneTask pickupPhone = new TelephoneTask("phone", "pick up phone");
+        //pickupPhone.AddObject(GameObject.Find("Telephone"));
+        //AddTask(pickupPhone);
+
+>>>>>>> ce7957079dcd56b17cb4c585d9302d574750200f
         // Toilet task
         ToiletTask unclogToilet = new ToiletTask("toilet", "unclog toilet");
         unclogToilet.AddObject(GameObject.Find("Toilet"));
