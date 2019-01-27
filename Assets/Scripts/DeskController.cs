@@ -84,9 +84,9 @@ public class DeskController : InteractiveController {
     {
         string msg = "";
 
-        string[] msgList = new string[3] { "y = mx + b", "mitochondria", "Do you bite your thumb..." };
+        string[] msgList = new string[3] { "y = mx + b", "mitochondria", "Nouns, verbs, ..." };
 
-        msg = msgList[Random.Range(0, msgList.Length - 1)];
+        msg = msgList[Random.Range(0, msgList.Length)];
 
         return msg;
     }
