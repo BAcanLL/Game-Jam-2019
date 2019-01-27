@@ -112,7 +112,7 @@ public class StorageTask : Task
         }
     }
 
-    private void NewCorrectSpot()
+    public void NewCorrectSpot()
     {
         correctSpot = Random.Range(0, objects.Count);
         Message = "put food into the " + objects[correctSpot].name;
@@ -176,6 +176,8 @@ public class TaskController : MonoBehaviour
         // Storage Task
         StorageTask storeFood = new StorageTask("store", "put food away");
         storeFood.AddObjects();
+        storeFood.NewCorrectSpot();
+        AddTask(storeFood);
 
         // Phone task
         TelephoneTask pickupPhone = new TelephoneTask("phone", "pick up phone");
