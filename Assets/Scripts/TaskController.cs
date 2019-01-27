@@ -42,10 +42,7 @@ public abstract class Task
 
 public class HomeworkTask : Task
 {
-    public HomeworkTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points)
-    {
-
-    }
+    public HomeworkTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points){}
 
     public override void AddObject(GameObject obj)
     {
@@ -56,10 +53,7 @@ public class HomeworkTask : Task
 
 public class LaundryTask : Task
 {
-    public LaundryTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points)
-    {
-
-    }
+    public LaundryTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points){}
 
     public override void AddObject(GameObject obj)
     {
@@ -68,8 +62,21 @@ public class LaundryTask : Task
     }
 }
 
+public class BedTask : Task
+{
+    public BedTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points){}
+
+    public override void AddObject(GameObject obj)
+    {
+        base.AddObject(obj);
+        obj.AddComponent<BedController>();
+    }
+}
+
 public class TaskController : MonoBehaviour
 {
+    private MCController player;
+
     public Text productivity;
     private int tasksComplete = 0;
 
@@ -79,15 +86,23 @@ public class TaskController : MonoBehaviour
     public void Start()
     {
         // Init references
+        player = GameObject.Find("Player").GetComponent<MCController>();
         stickyNotePrefab = (GameObject)Resources.Load("Sticky-note-prefab");
         stickyNoteContainer = GameObject.Find("List_of_tasks");
 
+        // Homework task
         HomeworkTask doHomework = new HomeworkTask("homework", "do homework");
         doHomework.AddObject(GameObject.Find("Desk"));
         AddTask(doHomework);
 
+        // Laundry task
         LaundryTask doLaundry = new LaundryTask("laundry", "do laundry");
         AddTask(doLaundry);
+
+        // Bed task
+        BedTask makeBed = new BedTask("bed", "make bed");
+        makeBed.AddObject(GameObject.Find("Bed"));
+        AddTask(makeBed);
     }
 
     public void Update()
@@ -112,7 +127,15 @@ public class TaskController : MonoBehaviour
         {
             if (task.objects.Count > 0 && task.IsDone())
             {
+                player.PlayTaskComplete(true);
+
                 Destroy(task.Sticky);
+                
+                foreach (GameObject obj in task.objects)
+                {
+                    obj.GetComponent<InteractiveController>().SelfDestruct();
+                }
+
                 tasks.Remove(task);
                 tasksComplete++;
             }
