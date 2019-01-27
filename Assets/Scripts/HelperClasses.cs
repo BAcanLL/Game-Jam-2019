@@ -39,4 +39,9 @@ public class Timer
             Done = true;
         }
     }
+
+    public int GetPercentDone()
+    {
+        return (int)(100 * time / presetTime);
+    }
 }
