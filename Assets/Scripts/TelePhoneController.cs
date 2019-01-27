@@ -9,7 +9,7 @@ public class TelePhoneController : InteractiveController {
 
 	// Use this for initialization
 	void Start () {
-        Init(/*transitionOffTime: 2,*/ key:KeyCode.Space);
+        Init(/*transitionOffTime: 2*/);
         nextCallTime = Random.Range(3, 5);
         nextCallTimer = new Timer(nextCallTime);
         anim = GetComponent<Animator>();
@@ -20,17 +20,18 @@ public class TelePhoneController : InteractiveController {
 	void Update ()
     {
         base.Update();
-        // Debug.Log(state);
 
         if (state == State.TransitionOn)
         {
         }
         if (state == State.On)
         {
+        //    Debug.Log(state);
             anim.Play("On");
         }
         if (state == State.Off)
         {
+          //  Debug.Log(state);
             anim.Play("Off");
         }
     }
@@ -40,18 +41,15 @@ public class TelePhoneController : InteractiveController {
         nextCallTimer.Update();
         // Debug.Log(nextCallTimer.time.ToString());
         if(nextCallTimer.Done) {
-            state = State.On;
+           state = State.On;
         }
     }
-    //public override void UpdateTransitionOn()
-    //{
-    //    // pass
-    //    state = State.On;
-    //}
 
     public override void UpdateTransitionOff()
     {
         base.UpdateTransitionOff();
-        // nextCallTimer.Set(Random.Range(15, 45));
+        //nextCallTime = Random.Range(5, 15);
+        //nextCallTimer.Set(nextCallTime);
+        //Debug.Log("TIME TIL NEXT CALL: " + nextCallTime);
     }
 }
