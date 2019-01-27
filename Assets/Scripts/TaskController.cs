@@ -178,12 +178,6 @@ public class TaskController : MonoBehaviour
         makeBed.AddObject(GameObject.Find("Bed"));
         AddTask(makeBed);
 
-        // Storage Task
-        StorageTask storeFood = new StorageTask("store", "put food away");
-        storeFood.AddObjects();
-        storeFood.NewCorrectSpot();
-        AddTask(storeFood);
-
         // Phone task
         TelephoneTask pickupPhone = new TelephoneTask("phone", "pick up phone");
         AddTask(pickupPhone);
@@ -192,6 +186,12 @@ public class TaskController : MonoBehaviour
         ToiletTask unclogToilet = new ToiletTask("toilet", "unclog toilet");
         unclogToilet.AddObject(GameObject.Find("Toilet"));
         AddTask(unclogToilet);
+
+        // Storage Task
+        StorageTask storeFood = new StorageTask("store", "put food away");
+        storeFood.AddObjects();
+        storeFood.NewCorrectSpot();
+        AddTask(storeFood);
     }
 
     public void Update()

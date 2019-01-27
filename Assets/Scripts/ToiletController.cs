@@ -4,19 +4,17 @@ using UnityEngine;
 
 public class ToiletController : InteractiveController
 {
-    private Timer overflowTimer;
-    private Timer plungeTimer;
+    // private Timer overflowTimer;
     private float overflowTime;
     private float plungeTime;
-    // bool hasPlunger = false;
 
 	// Use this for initialization
 	void Start () {
         plungeTime = Random.Range(1, 5);
         overflowTime = Random.Range(15, 45);
         Init(transitionOffTime: plungeTime, key: KeyCode.P);
-        overflowTimer = new Timer(overflowTime);
-        Debug.Log("TIME TIL NEXT OVERFLOW: " + overflowTime);
+        // overflowTimer = new Timer(overflowTime);
+        // Debug.Log("TIME TIL NEXT OVERFLOW: " + overflowTime);
 	}
 
     private bool hasPlunger() {
@@ -39,12 +37,15 @@ public class ToiletController : InteractiveController
 
     public override void UpdateOff()
     {
+        state = State.TransitionOn;
+        /* 
         // Only activates once, switches us to an activating state
         overflowTimer.Update();
         // Debug.Log(overflowTimer.time.ToString());
         if(overflowTimer.Done) {
             state = State.TransitionOn;
         }
+        */
     }
 
     public override void UpdateTransitionOn()

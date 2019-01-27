@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class TimerController : MonoBehaviour {
 
-    public const float GAME_LENGTH = 0.1f; // in minutes
+    public const float GAME_LENGTH = 2.0f; // in minutes
 
     private Text timeText;
     public Timer masterTimer = new Timer(GAME_LENGTH * 60);
@@ -17,7 +17,7 @@ public class TimerController : MonoBehaviour {
 	void Start () {
         timeText = GetComponent<Text>();
         masterTimer.Set(GAME_LENGTH * 60);
-        gameOverPanel.SetActive(false);
+        // gameOverPanel.SetActive(false);
 }
 	
 	// Update is called once per frame
@@ -28,7 +28,7 @@ public class TimerController : MonoBehaviour {
 
             TaskController.GameOver = true;
 
-            gameOverPanel.SetActive(true);
+            // gameOverPanel.SetActive(true);
 
             timeText.text = "00:00:00";
         }
