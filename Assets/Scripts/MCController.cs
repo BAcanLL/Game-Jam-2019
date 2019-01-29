@@ -52,53 +52,56 @@ public class MCController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        newMoveDir = Vector2.zero;
-
-        // Add any movement vectors the player input
-        if (Input.GetKey(lMoveKey))
+        if (!TimerController.GameOver)
         {
-            newMoveDir += new Vector2(-1, 0);
-        }
-        if (Input.GetKey(rMoveKey))
-        {
-            newMoveDir += new Vector2(1, 0);
-        }
-        if (Input.GetKey(uMoveKey))
-        {
-            newMoveDir += new Vector2(0, 1);
-            facing = Direction.back;
-        }
-        if (Input.GetKey(dMoveKey))
-        {
-            newMoveDir += new Vector2(0, -1);
-            facing = Direction.front;
-        }
+            newMoveDir = Vector2.zero;
 
-        // Play walking animations
-        if(newMoveDir != Vector2.zero)
-        {
-            if (facing == Direction.front)
-                anim.Play("Walk_front");
-            else if (facing == Direction.back)
-                anim.Play("Walk_back");
+            // Add any movement vectors the player input
+            if (Input.GetKey(lMoveKey))
+            {
+                newMoveDir += new Vector2(-1, 0);
+            }
+            if (Input.GetKey(rMoveKey))
+            {
+                newMoveDir += new Vector2(1, 0);
+            }
+            if (Input.GetKey(uMoveKey))
+            {
+                newMoveDir += new Vector2(0, 1);
+                facing = Direction.back;
+            }
+            if (Input.GetKey(dMoveKey))
+            {
+                newMoveDir += new Vector2(0, -1);
+                facing = Direction.front;
+            }
+
+            // Play walking animations
+            if (newMoveDir != Vector2.zero)
+            {
+                if (facing == Direction.front)
+                    anim.Play("Walk_front");
+                else if (facing == Direction.back)
+                    anim.Play("Walk_back");
+            }
+
+            //Idle when no inputs
+            if (!Input.anyKey)
+            {
+                pRBody.velocity = Vector2.zero;
+                if (facing == Direction.front)
+                    anim.Play("Idle_front");
+                else if (facing == Direction.back)
+                    anim.Play("Idle_back");
+            }
+
+            newMoveDir.Normalize();
+            newMoveDir *= speed;
+
+            Move(newMoveDir);
+
+            HandleItems();
         }
-
-        //Idle when no inputs
-        if (!Input.anyKey)
-        {
-            pRBody.velocity = Vector2.zero;
-            if (facing == Direction.front)
-                anim.Play("Idle_front");
-            else if (facing == Direction.back)
-                anim.Play("Idle_back");
-        }
-
-        newMoveDir.Normalize();
-        newMoveDir *= speed;
-
-        Move(newMoveDir);
-
-        HandleItems();
     }
 
     private void HandleItems()
@@ -109,6 +112,7 @@ public class MCController : MonoBehaviour
             {
                 PickupController pc = pickedUpItem.GetComponent<PickupController>();
                 pc.user = null;
+                pickedUpItem.transform.Translate(-pc.offset - new Vector2(0, 0.5f));
                 pickedUpItem = null;
             }
         }

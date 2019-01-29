@@ -18,6 +18,7 @@ public class ToiletController : InteractiveController
 
         defaultPickupSprite = Resources.Load<Sprite>("Plunger");
         SpawnPickup(defaultPickupSprite, "Plunger");
+        defaultSoundClip = (AudioClip)Resources.Load("flush");
     }
 
     private bool hasPlunger() {
@@ -33,8 +34,6 @@ public class ToiletController : InteractiveController
     // Update is called once per frame
     void Update()
     {
-        if (Done)
-            message.text = "";
         base.Update();
     }
 
@@ -75,7 +74,7 @@ public class ToiletController : InteractiveController
             {
                 transitionOffTimer.Update();
                 int percentDone = transitionOffTimer.GetPercentDone();
-                message.text = "toilet plunging:  " + percentDone + "%";
+                PlaySFX(defaultSoundClip);
                 anim.Play("Flushing");
             }
         }

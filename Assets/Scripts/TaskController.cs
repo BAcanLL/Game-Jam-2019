@@ -22,7 +22,7 @@ public abstract class Task
         this.Points = Points;
     }
 
-    public virtual void AddObject(GameObject obj)
+    public virtual void AddObject(GameObject obj, bool addController)
     {
         objects.Add(obj);
     }
@@ -45,21 +45,12 @@ public class HomeworkTask : Task
 {
     public HomeworkTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points){}
 
-    public override void AddObject(GameObject obj)
+    public override void AddObject(GameObject obj, bool addController)
     {
-        base.AddObject(obj);
-        obj.AddComponent<DeskController>();
-    }
-}
+        base.AddObject(obj, addController);
 
-public class LaundryTask : Task
-{
-    public LaundryTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points){}
-
-    public override void AddObject(GameObject obj)
-    {
-        base.AddObject(obj);
-        //obj.AddComponent<DeskController>();
+        if(addController)
+            obj.AddComponent<DeskController>();
     }
 }
 
@@ -67,10 +58,12 @@ public class BedTask : Task
 {
     public BedTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points){}
 
-    public override void AddObject(GameObject obj)
+    public override void AddObject(GameObject obj, bool addController)
     {
-        base.AddObject(obj);
-        obj.AddComponent<BedController>();
+        base.AddObject(obj, addController);
+        
+        if(addController)
+            obj.AddComponent<BedController>();
     }
 }
 
@@ -81,10 +74,12 @@ public class StorageTask : Task
     {
     }
 
-    public override void AddObject(GameObject obj)
+    public override void AddObject(GameObject obj, bool addController)
     {
-        base.AddObject(obj);
-        obj.AddComponent<StorageController>();
+        base.AddObject(obj, addController);
+
+        if(addController)
+            obj.AddComponent<StorageController>();
     }
 
     public override bool IsDone()
@@ -109,7 +104,7 @@ public class StorageTask : Task
         GameObject[] storageObjects = GameObject.FindGameObjectsWithTag("Storage");
         for (int i = 0; i < storageObjects.Length; ++i)
         {
-            AddObject(storageObjects[i]);
+            //AddObject(storageObjects[i]);
             storageObjects[i].GetComponent<InteractiveController>().TurnOn();
         }
     }
@@ -126,10 +121,12 @@ public class TelephoneTask : Task
 {
     public TelephoneTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points) { }
 
-    public override void AddObject(GameObject obj)
+    public override void AddObject(GameObject obj, bool addController)
     {
-        base.AddObject(obj);
-        obj.AddComponent<TelephoneController>();
+        base.AddObject(obj, addController);
+
+        if(addController)
+            obj.AddComponent<TelephoneController>();
     }
 }
 
@@ -137,10 +134,12 @@ public class ToiletTask : Task
 {
     public ToiletTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points){}
 
-    public override void AddObject(GameObject obj)
+    public override void AddObject(GameObject obj, bool addController)
     {
-        base.AddObject(obj);
-        obj.AddComponent<ToiletController>();
+        base.AddObject(obj, addController);
+
+        if(addController)
+            obj.AddComponent<ToiletController>();
     }
 }
 
@@ -148,10 +147,12 @@ public class WashingMachineTask : Task
 {
     public WashingMachineTask(string TaskName, string Message, int Points = BASE_POINTS) : base(TaskName, Message, Points) { }
 
-    public override void AddObject(GameObject obj)
+    public override void AddObject(GameObject obj, bool addController)
     {
-        base.AddObject(obj);
-        obj.AddComponent<WashingMachineController>();
+        base.AddObject(obj, addController);
+
+        if(addController)
+            obj.AddComponent<WashingMachineController>();
     }
 }
 
@@ -180,7 +181,6 @@ public class TaskController : MonoBehaviour
     private List<StoredTask> futureTasks = new List<StoredTask>() { };
     private Timer newTaskTimer = new Timer(NEW_TASK_RATE);
 
-    public static bool GameOver = false;
 
     public void Start()
     {
@@ -192,35 +192,33 @@ public class TaskController : MonoBehaviour
 
         // Homework task
         HomeworkTask doHomework = new HomeworkTask("homework", "do homework");
-        doHomework.AddObject(GameObject.Find("Desk"));
+        doHomework.AddObject(GameObject.Find("Desk"), true);
         AddTask(doHomework);
         StoreTask(doHomework);
 
         // Washing machine task
-        WashingMachineTask washClothes = new WashingMachineTask("washClothes", "wash clothes");
-        washClothes.AddObject(GameObject.Find("WashingMachine"));
+        WashingMachineTask washClothes = new WashingMachineTask("washClothes", "do laundry");
+        washClothes.AddObject(GameObject.Find("WashingMachine"), true);
         AddTask(washClothes);
         StoreTask(washClothes);
 
-        // Laundry task
-        LaundryTask doLaundry = new LaundryTask("laundry", "do laundry");
-        AddTask(doLaundry);
-
         // Bed task
         BedTask makeBed = new BedTask("bed", "make bed");
-        makeBed.AddObject(GameObject.Find("Bed"));
+        makeBed.AddObject(GameObject.Find("Bed"), true);
         AddTask(makeBed);
         StoreTask(makeBed);
 
         // Toilet task
         ToiletTask unclogToilet = new ToiletTask("toilet", "unclog toilet");
-        unclogToilet.AddObject(GameObject.Find("Toilet"));
-        AddTask(unclogToilet);
+        unclogToilet.AddObject(GameObject.Find("Toilet"), false);
+        //AddTask(unclogToilet);
+        StoreTask(unclogToilet);
 
         // Phone task
         TelephoneTask pickupPhone = new TelephoneTask("phone", "pick up phone");
-        pickupPhone.AddObject(GameObject.Find("Telephone"));
-        AddTask(pickupPhone);
+        pickupPhone.AddObject(GameObject.Find("Telephone"), false);
+        //AddTask(pickupPhone);
+        StoreTask(pickupPhone);
 
         // Storage task
         //StorageTask storeTask = new StorageTask("store", "")
@@ -319,9 +317,14 @@ public class TaskController : MonoBehaviour
             {
                 AddTask(newTask);
 
+                GetComponent<AudioSource>().Play();
+
+                Debug.Log("New task: " + newTask.TaskName);
+
                 foreach (GameObject obj in futureTasks[randIndex].objects)
                 {
-                    newTask.AddObject(obj);
+                    newTask.objects.Clear();
+                    newTask.AddObject(obj, true);
                 }
             }
         }

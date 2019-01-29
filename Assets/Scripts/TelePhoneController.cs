@@ -8,12 +8,13 @@ public class TelephoneController : InteractiveController {
     //private Timer nextCallTimer;
     //private float nextCallTime;
     Animator anim;
-    bool dun = false;
+    private bool dun = false, answered = false, hungUp = false;
     private Text message;
     private string caller;
-    static string[] callers = { "mom", "dad", "grandma", "telemarketer", "friend" };
+    static string[] callers = { "Mom", "Dad", "Grandma", "Chris from next door" };
     private const float RING_DELAY = 0.5f;
     private Timer ringTimer = new Timer(RING_DELAY);
+    private AudioClip talking, click;
 
 	// Use this for initialization
 	void Start () {
@@ -26,7 +27,9 @@ public class TelephoneController : InteractiveController {
         caller = GetNewCaller();
         defaultSoundClip = (AudioClip)Resources.Load("phone_ring");
         ringTimer.Reset();
-	}
+        talking = Resources.Load<AudioClip>("talking");
+        click = Resources.Load<AudioClip>("phone_click");
+    }
 
 	// Update is called once per frame
 	void Update ()
@@ -56,6 +59,14 @@ public class TelephoneController : InteractiveController {
             anim.Play("Off");
             if (dun) Done = true;
             message.text = "";
+
+            if(!hungUp)
+            {
+                StopSFX();
+                PlaySFX(click);
+                hungUp = true;
+            }
+
         }
     }
     public override void UpdateOff()
@@ -65,12 +76,28 @@ public class TelephoneController : InteractiveController {
     public override void UpdateTransitionOff()
     {
         base.UpdateTransitionOff();
-        message.text = "Calling " + caller + "... " + transitionOffTimer.GetPercentDone();
+
+        if (!answered)
+        {
+            StopSFX();
+            PlaySFX(click);
+            answered = true;
+        }
+        else if(collidingWithPlayer && Input.GetKey(activeKey))
+        {
+            PlaySFX(talking);
+            message.text = "Calling " + caller + "... ";
+        }
+        else
+        {
+            StopSFX();
+            message.text = caller + " on hold.";
+        }
     }
 
     private string GetNewCaller()
     {
-        int nextCaller = Random.Range(0, 5);
+        int nextCaller = Random.Range(0, callers.Length);
         return callers[nextCaller];
     }
 }

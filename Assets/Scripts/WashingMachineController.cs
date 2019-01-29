@@ -5,27 +5,36 @@ using UnityEngine.UI;
 
 public class WashingMachineController : InteractiveController {
 
-    Animator anim;
-    Timer t;
+    private Animator anim;
+    private const float WASH_TIME = 10, NUM_CLOTHES = 3;
+    private Timer onTimer;
 
     private MCController pc;
     private int loads;
     private Text message;
+    private bool washed = false;
 
 	// Use this for initialization
 	void Start () {
-        Init(transitionOnTime:3);
+        Init();
         anim = GetComponent<Animator>();
-        t = new Timer(3);
+        onTimer = new Timer(WASH_TIME);
         pc = GameObject.Find("Player").GetComponent<MCController>();
         loads = 0;
         message = GetComponentInChildren<Text>();
         message.text = "";
+        defaultSoundClip = (AudioClip)Resources.Load("washing_machine");
 
-        defaultPickupSprite = Resources.Load<Sprite>("Laundry");
-        SpawnPickup(defaultPickupSprite, "Laundry");
-        SpawnPickup(defaultPickupSprite, "Laundry");
-        SpawnPickup(defaultPickupSprite, "Laundry");
+
+        for (int i = 0; i < NUM_CLOTHES; i++)
+        {
+            int num = Random.Range(1, 4);
+
+            Sprite[] sprite = Resources.LoadAll<Sprite>("Laundry2");
+            GameObject pickupObj = SpawnPickup(sprite[num], "Laundry");
+
+            pickupObj.transform.Translate(new Vector2(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f)));
+        }
     }
     
     // Update is called once per frame
@@ -38,47 +47,54 @@ public class WashingMachineController : InteractiveController {
         }
         if (state == State.On)
         {
-            t.Update();
-            if (t.Done == true)
-            {
-                Done = true;
-                message.text = "";
-                anim.Play("Off");
-            }
             anim.Play("On");
+            PlaySFX(defaultSoundClip);
+        }
+        if (state == State.TransitionOff)
+        {
+            StopSFX();
+            message.text = "Done";
+            anim.Play("Off");
         }
     }
 
     public override void UpdateOff()
     {
-        if (loads == 3)
+        if (loads == NUM_CLOTHES)
         {
             base.UpdateOff();
         }
 
         if (collidingWithPlayer)
         {
-            if (Input.GetKeyDown(pc.dropKey) && pc.GetHeldItemName().Contains("Laundry"))
+            if (Input.GetKeyDown(activeKey) && pc.GetHeldItemName().Contains("Laundry"))
             {
-                if(loads < 3)
+                if(loads < NUM_CLOTHES)
                 {
                     pc.ConsumeItem();
                     loads++;
-                    message.text = "Loads: " + loads + "/3";
+                    message.text = "Loads: " + loads + "/" + NUM_CLOTHES;
                 }  
             }
         }
     }
 
-    public override void UpdateTransitionOn()
-    {
-        base.UpdateTransitionOn();
-        message.text = "Turning on machine... " + transitionOnTimer.GetPercentDone();
-    }
-
     public override void UpdateOn()
     {
-        base.UpdateOn();
-        message.text = "Washing Clothes " + t.GetPercentDone();
+        onTimer.Update();
+
+        if (onTimer.Done)
+            state = State.TransitionOff;
+
+        message.text = "";
+    }
+    public override void UpdateTransitionOff()
+    {
+        if(collidingWithPlayer && Input.GetKey(activeKey))
+        {
+            Done = true;
+            message.text = "";
+            state = State.Off;
+        }
     }
 }

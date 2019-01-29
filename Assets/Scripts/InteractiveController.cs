@@ -129,27 +129,6 @@ public class InteractiveController : MonoBehaviour {
             state = State.TransitionOn;
         }
     }
-    
-
-    // Not sure why UpdateTransition doesn't work
-    /*
-    protected void UpdateTransition(Timer timer, State toState)
-
-    {
-        if (collidingWithPlayer && Input.GetKeyDown(activeKey))
-        {
-            // Check if we're past any delay time
-            if (timer.Done)
-            {
-                state = toState;
-                nextState();
-            }
-            else
-            {
-                timer.Update();
-            }
-        }
-    } */
 
     public virtual void UpdateTransitionOn()
     {
@@ -216,12 +195,19 @@ public class InteractiveController : MonoBehaviour {
         return played;
     }
 
-    public void SpawnPickup(Sprite sprite, string name)
+    public void StopSFX()
+    {
+        GetComponent<AudioSource>().Stop();
+    }
+
+    public GameObject SpawnPickup(Sprite sprite, string name)
     {
         int index = Random.Range(0, locations.transform.childCount);
         GameObject pickupObj = Instantiate(pickupPrefab, locations.transform.GetChild(index));
         pickupObj.GetComponent<SpriteRenderer>().sprite = sprite;
         pickupObj.name = name;
+
+        return pickupObj;
     }
 
 }
