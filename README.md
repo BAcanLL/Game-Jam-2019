@@ -3,4 +3,4 @@
 
 To play the game, download the *MaintenanceMania.zip* file, extract its contents, and run the Unity executable.
 
-*README still in development*
+(*README still in development*)
